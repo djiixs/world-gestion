@@ -22,7 +22,28 @@
 
   /* Effects */
   --shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  --shadow-hover: 0 16px 48px rgba(0, 0, 0, 0.6);
   --radius: 10px;
+}
+
+.theme-light {
+  /* Backgrounds */
+  --background: #edf1f6;
+  --background-secondary: #e4eaf2;
+  --background-tertiary: #f7f9fc;
+
+  /* Text */
+  --foreground: #0f172a;
+  --foreground-secondary: #334155;
+  --foreground-muted: #64748b;
+
+  /* Borders */
+  --border: rgba(15, 23, 42, 0.16);
+  --border-gold: rgba(201, 168, 76, 0.45);
+
+  /* Effects */
+  --shadow: 0 8px 24px rgba(15, 23, 42, 0.1);
+  --shadow-hover: 0 14px 30px rgba(15, 23, 42, 0.18);
 }
 
 @theme inline {
@@ -67,7 +88,7 @@ html {
   transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 .card-hover:hover {
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
+  box-shadow: var(--shadow-hover);
   transform: translateY(-5px);
   border-color: var(--gold) !important;
 }

@@ -36,9 +36,26 @@ export default function Home() {
   const [isEntrepreneur, setIsEntrepreneur] = useState(true);
   const [selectedOffer, setSelectedOffer] = useState<Offer | null>(null);
   const [showPartnershipModal, setShowPartnershipModal] = useState(false);
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [themeReady, setThemeReady] = useState(false);
   const scrollTo = useCallback((el: HTMLElement | null) => {
     if (el) smoothScrollTo(el);
   }, []);
+
+  useEffect(() => {
+    const savedTheme = window.localStorage.getItem("theme");
+    if (savedTheme === "light" || savedTheme === "dark") {
+      setTheme(savedTheme);
+    }
+    setThemeReady(true);
+  }, []);
+
+  useEffect(() => {
+    if (!themeReady) return;
+    const root = document.documentElement;
+    root.classList.toggle("theme-light", theme === "light");
+    window.localStorage.setItem("theme", theme);
+  }, [theme, themeReady]);
 
   const handleOfferSelect = (offer: Offer) => {
     setSelectedOffer(offer);
@@ -46,11 +63,52 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <button
+        type="button"
+        onClick={() => setTheme((prev) => (prev === "dark" ? "light" : "dark"))}
+        aria-label={theme === "dark" ? "Activer le mode clair" : "Activer le mode sombre"}
+        title={theme === "dark" ? "Mode clair" : "Mode sombre"}
+        className="fixed top-4 right-4 z-[60] h-9 w-16 rounded-full border border-border-gold bg-background-tertiary/95 p-1 shadow-[var(--shadow)] transition-all duration-300"
+      >
+        <span className="relative block h-full w-full" aria-hidden="true">
+          <span
+            className={`pointer-events-none absolute left-[7px] top-1/2 z-20 -translate-y-1/2 transition-colors duration-300 ${
+              theme === "dark" ? "text-[#0b132b]" : "text-foreground-muted"
+            }`}
+          >
+            <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21.752 15.002A9.718 9.718 0 0 1 12 21.75C6.615 21.75 2.25 17.385 2.25 12A9.718 9.718 0 0 1 8.998 2.248a.75.75 0 0 1 .85.973 8.25 8.25 0 0 0 10.932 10.932.75.75 0 0 1 .972.85Z" />
+            </svg>
+          </span>
+          <span
+            className={`pointer-events-none absolute right-[7px] top-1/2 z-20 -translate-y-1/2 transition-colors duration-300 ${
+              theme === "light" ? "text-[#0b132b]" : "text-gold/80"
+            }`}
+          >
+            <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25M12 18.75V21M5.636 5.636l1.59 1.59M16.773 16.773l1.591 1.591M3 12h2.25M18.75 12H21M5.636 18.364l1.59-1.59M16.773 7.227l1.591-1.591M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />
+            </svg>
+          </span>
+
+          <span
+            className={`absolute top-0 z-10 h-7 w-7 rounded-full border border-border-gold bg-gold text-[#0b132b] shadow-sm transition-transform duration-300 grid place-items-center ${theme === "light" ? "translate-x-7" : "translate-x-0"}`}
+          />
+        </span>
+      </button>
+
       {/* ─── HERO SECTION ─── */}
-      <section className="relative px-6 py-10 md:py-14 overflow-hidden" style={{ background: "linear-gradient(135deg, #0b132b, #0f1c3f)" }}>
+      <section
+        className="relative px-6 py-10 md:py-14 overflow-hidden"
+        style={{
+          background:
+            theme === "dark"
+              ? "linear-gradient(135deg, #0b132b, #0f1c3f)"
+              : "linear-gradient(135deg, #eceff4, #e1e7ef)",
+        }}
+      >
         {/* Background image overlay with fade edges */}
         <div className="absolute right-0 top-[10%] w-[45%] h-[90%] pointer-events-none" style={{ maskImage: "radial-gradient(ellipse at center, black 30%, transparent 75%)", WebkitMaskImage: "radial-gradient(ellipse at center, black 30%, transparent 75%)" }}>
-          <div className="w-full h-full opacity-25 bg-[url('/hero-bg.jpg')] bg-center bg-no-repeat bg-cover" />
+          <div className={`w-full h-full bg-[url('/hero-bg.jpg')] bg-center bg-no-repeat bg-cover ${theme === "dark" ? "opacity-25" : "opacity-30"}`} />
         </div>
 
         <div className="relative z-10 max-w-3xl mx-auto md:mx-0 md:ml-[10%]">
@@ -68,7 +126,7 @@ export default function Home() {
           </div>
 
           {/* Title */}
-          <h1 className="font-title text-xl sm:text-4xl md:text-5xl font-bold leading-tight text-white">
+          <h1 className={`font-title text-xl sm:text-4xl md:text-5xl font-bold leading-tight ${theme === "dark" ? "text-white" : "text-slate-900"}`}>
             Simplifier et optimiser votre<br />
             gestion d&apos;entreprise.
           </h1>
