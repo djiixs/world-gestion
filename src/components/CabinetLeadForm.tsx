@@ -146,7 +146,7 @@ export default function CabinetLeadForm({ offer, onClose }: Props) {
         </div>
         <div>
           <label htmlFor="cab-message" className="block text-sm font-semibold text-foreground mb-2">
-            Précisions de votre demande
+            Précisions sur votre demande
           </label>
           <textarea
             id="cab-message"

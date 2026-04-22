@@ -57,7 +57,7 @@ export default function EntrepreneurOffers({ offers, onSelect }: Props) {
             </div>
           </div>
           <div className="px-1 text-center text-xs text-foreground-muted">
-            <p className="font-medium text-foreground-secondary">Sans engagement • Toutes les prestations sont adaptables selon votre activite</p>
+            <p className="font-medium text-foreground-secondary">Sans engagement • Toutes les prestations sont adaptables selon votre activité</p>
             <div className="mt-2 flex items-center justify-center gap-3 text-foreground-muted">
               <p className="text-gold font-semibold">contact@worldgestion.fr</p>
               <span className="text-foreground-muted">•</span>
