@@ -1,0 +1,66 @@
+import { Offer } from "@/types/offers";
+
+export const entrepreneurOffers: Offer[] = [
+  {
+    id: "ent-essentielle",
+    title: "Essentielle",
+    description: "Idéale pour démarrer et structurer votre administratif",
+    features: [
+      "Gestion des emails et courriers",
+      "Organisation et classement des documents",
+      "Rédaction de documents simples (devis, contrats)",
+      "Classement et archivage",
+    ],
+    price: 150,
+    priceLabel: "150 €",
+    priceUnit: "/mois",
+    cta: "Choisir cette offre",
+  },
+  {
+    id: "ent-confort",
+    title: "Confort",
+    description: "Pour une gestion administrative complète et sereine",
+    features: [
+      "Saisie de factures",
+      "Classement des pièces comptables",
+      "Préparation des dossiers pour l'expert-comptable",
+      "Relances simples (clients, factures)",
+      "Mise en place d'outils d'organisation",
+    ],
+    price: 300,
+    priceLabel: "300 €",
+    priceUnit: "/mois",
+    popular: true,
+    badge: "Populaire",
+    cta: "Choisir cette offre",
+  },
+  {
+    id: "ent-premium",
+    title: "Premium",
+    description: "L'accompagnement complet pour vous libérer l'esprit",
+    features: [
+      "Devis & facturation",
+      "Relance clients",
+      "Suivi des paiements",
+      "Assistance quotidienne",
+      "Accompagnement mensuel personnalisé",
+    ],
+    price: 500,
+    priceLabel: "500 €",
+    priceUnit: "/mois",
+    cta: "Choisir cette offre",
+  },
+  {
+    id: "ent-ponctuelle",
+    title: "Tarif horaire",
+    description: "Missions ponctuelles ou sur mesure selon vos besoins",
+    features: [
+      "Mission ponctuelle",
+    ],
+    price: 45,
+    priceLabel: "45 €",
+    priceUnit: "/heure",
+    tag: "Sans engagement",
+    cta: "Choisir cette offre",
+  },
+];
