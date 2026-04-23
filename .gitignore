@@ -1,5 +1,7 @@
 node_modules
 .next
+.env
 .env.local
+.env.*.local
 images/GitHubDesktopSetup-x64.exe
 data/admin-store.json

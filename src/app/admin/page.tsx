@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import Image from "next/image";
 import { ADMIN_COOKIE_NAME, isAdminSessionTokenValid } from "@/lib/admin-auth";
 import { getAdminDashboardData } from "@/lib/admin-store";
 
@@ -26,6 +27,11 @@ export default async function AdminPage() {
   return (
     <main className="min-h-screen bg-background px-4 py-8 sm:px-6 sm:py-10">
       <div className="mx-auto w-full max-w-6xl space-y-6">
+
+        <div className="flex justify-center">
+          <Image src="/logo.png" alt="World Gestion" width={110} height={36} className="object-contain" priority />
+        </div>
+
         <header className="rounded-2xl border border-border-gold bg-background-tertiary p-5 sm:p-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
@@ -83,8 +89,12 @@ export default async function AdminPage() {
                         ? `${lead.firstName ?? ""} ${lead.lastName ?? ""}`.trim()
                         : lead.cabinetName || lead.responsableName || "-"}
                     </td>
-                    <td className="px-2 py-2 text-foreground">{lead.email}</td>
-                    <td className="px-2 py-2 text-foreground-secondary">{lead.phone}</td>
+                    <td className="px-2 py-2">
+                      <a href={`mailto:${lead.email}`} className="text-gold hover:underline">{lead.email}</a>
+                    </td>
+                    <td className="px-2 py-2">
+                      {lead.phone ? <a href={`tel:${lead.phone}`} className="text-gold hover:underline">{lead.phone}</a> : "-"}
+                    </td>
                     <td className="px-2 py-2 text-foreground-secondary">{lead.offerTitle}</td>
                     <td className="px-2 py-2 text-foreground-secondary">{lead.note || "-"}</td>
                   </tr>
@@ -93,49 +103,6 @@ export default async function AdminPage() {
                   <tr>
                     <td className="px-2 py-4 text-foreground-muted" colSpan={7}>
                       Aucune demande enregistrée.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </section>
-
-        <section className="rounded-2xl border border-border bg-background-tertiary p-4 sm:p-5">
-          <h2 className="font-title text-xl text-gold mb-4">Achats</h2>
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[760px] text-sm">
-              <thead>
-                <tr className="border-b border-border">
-                  <th className="px-2 py-2 text-left font-semibold text-foreground-muted">Date</th>
-                  <th className="px-2 py-2 text-left font-semibold text-foreground-muted">Offre</th>
-                  <th className="px-2 py-2 text-left font-semibold text-foreground-muted">Montant</th>
-                  <th className="px-2 py-2 text-left font-semibold text-foreground-muted">Email</th>
-                  <th className="px-2 py-2 text-left font-semibold text-foreground-muted">Statut</th>
-                  <th className="px-2 py-2 text-left font-semibold text-foreground-muted">Stripe PI</th>
-                </tr>
-              </thead>
-              <tbody>
-                {purchases.map((purchase) => (
-                  <tr key={purchase.id} className="border-b border-border/60 align-top">
-                    <td className="px-2 py-2 text-foreground-secondary">{formatDate(purchase.createdAt)}</td>
-                    <td className="px-2 py-2 text-foreground-secondary">{purchase.offerId}</td>
-                    <td className="px-2 py-2 text-foreground">
-                      {(purchase.amount / 100).toFixed(2)} {purchase.currency.toUpperCase()}
-                    </td>
-                    <td className="px-2 py-2 text-foreground-secondary">{purchase.email || "-"}</td>
-                    <td className="px-2 py-2">
-                      <span className="rounded-full border border-border px-2 py-1 text-xs text-foreground-secondary">
-                        {purchase.status}
-                      </span>
-                    </td>
-                    <td className="px-2 py-2 text-foreground-muted">{purchase.stripePaymentIntentId || "-"}</td>
-                  </tr>
-                ))}
-                {purchases.length === 0 && (
-                  <tr>
-                    <td className="px-2 py-4 text-foreground-muted" colSpan={6}>
-                      Aucun achat enregistré.
                     </td>
                   </tr>
                 )}
