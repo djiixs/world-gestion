@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe";
+import { addPurchase } from "@/lib/admin-store";
 
 // Server-side mapping: offerId → amount in cents + currency
 const offerConfig: Record<string, { amount: number; currency: string; recurring: boolean }> = {
@@ -43,6 +44,15 @@ export async function POST(req: NextRequest) {
       automatic_payment_methods: {
         enabled: true,
       },
+    });
+
+    await addPurchase({
+      offerId,
+      amount: config.amount,
+      currency: config.currency,
+      status: "initiated",
+      source: "payment_intent",
+      stripePaymentIntentId: paymentIntent.id,
     });
 
     return NextResponse.json({

@@ -6,6 +6,7 @@ import { stripePromise } from "@/lib/stripe-client";
 
 interface PaymentFormProps {
   clientSecret: string;
+  offerId: string;
   offerTitle: string;
   priceLabel: string;
   priceUnit: string;
@@ -13,7 +14,7 @@ interface PaymentFormProps {
   onBack: () => void;
 }
 
-function CheckoutForm({ offerTitle, priceLabel, priceUnit, onSuccess, onBack }: Omit<PaymentFormProps, "clientSecret">) {
+function CheckoutForm({ clientSecret, offerTitle, priceLabel, priceUnit, onSuccess, onBack }: PaymentFormProps) {
   const stripe = useStripe();
   const elements = useElements();
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
@@ -38,6 +39,24 @@ function CheckoutForm({ offerTitle, priceLabel, priceUnit, onSuccess, onBack }: 
       setErrorMsg(error.message ?? "Une erreur est survenue.");
       setStatus("error");
     } else {
+      const intentResult = await stripe.retrievePaymentIntent(clientSecret);
+      const paymentIntentId = intentResult.paymentIntent?.id;
+      const paymentIntentStatus = intentResult.paymentIntent?.status;
+
+      if (paymentIntentId) {
+        const statusToStore = paymentIntentStatus === "succeeded" ? "succeeded" : "failed";
+        await fetch("/api/purchases/confirm", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            paymentIntentId,
+            status: statusToStore,
+          }),
+        }).catch(() => {
+          // Purchase is already tracked as initiated server-side.
+        });
+      }
+
       setStatus("idle");
       onSuccess();
     }
@@ -145,7 +164,7 @@ export default function PaymentForm({ clientSecret, ...props }: PaymentFormProps
         },
       }}
     >
-      <CheckoutForm {...props} />
+      <CheckoutForm clientSecret={clientSecret} {...props} />
     </Elements>
   );
 }

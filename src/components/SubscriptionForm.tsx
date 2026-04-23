@@ -147,6 +147,7 @@ export default function SubscriptionForm({ offer, onClose }: Props) {
 
         <PaymentForm
           clientSecret={clientSecret}
+          offerId={offer.id}
           offerTitle={offer.title}
           priceLabel={offer.priceLabel ?? ""}
           priceUnit={offer.priceUnit ?? ""}

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sendEmail } from "@/lib/mailer";
+import { addLead } from "@/lib/admin-store";
 
 export async function POST(req: NextRequest) {
   try {
@@ -21,6 +22,18 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
+
+    await addLead({
+      type: "cabinet",
+      offerId,
+      offerTitle: offerTitle || offerId,
+      email,
+      phone,
+      cabinetName,
+      responsableName,
+      nbDossiers: nbDossiers || undefined,
+      note: message || undefined,
+    });
 
     const contactEmail = process.env.CONTACT_EMAIL;
     if (!contactEmail) {
@@ -45,28 +58,21 @@ export async function POST(req: NextRequest) {
       <p style="margin-top:16px;font-size:13px;color:#64748b">Envoyé depuis le site World Gestion le ${new Date().toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" })}</p>
     `;
 
-    await sendEmail({
-      to: contactEmail,
-      replyTo: email,
-      subject: `Nouvelle demande cabinet — ${offerTitle} — ${cabinetName}`,
-      html: htmlBody,
-    });
+    try {
+      await sendEmail({
+        to: contactEmail,
+        replyTo: email,
+        subject: `Nouvelle demande cabinet — ${offerTitle} — ${cabinetName}`,
+        html: htmlBody,
+      });
+    } catch (emailError) {
+      // Leads are stored in admin dashboard; email notifications are best-effort.
+      console.error("[contact] Notification email non envoyée:", emailError);
+    }
 
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error("[contact] Erreur interne :", err);
-    const isAuthError =
-      typeof err === "object" &&
-      err !== null &&
-      "code" in err &&
-      (err as { code?: string }).code === "EAUTH";
-
-    if (isAuthError) {
-      return NextResponse.json(
-        { error: "Authentification SMTP échouée (OVH). Vérifie SMTP_USER et SMTP_PASS." },
-        { status: 502 }
-      );
-    }
 
     return NextResponse.json(
       { error: "Erreur interne" },
