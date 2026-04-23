@@ -122,7 +122,7 @@ export default function Home() {
 
           {/* Title */}
           <h1 className={`font-title text-xl sm:text-4xl md:text-5xl font-bold leading-tight ${theme === "dark" ? "text-white" : "text-slate-900"}`}>
-            Simplifier et optimiser votre<br />
+            Simplifiez et optimisez votre<br />
             gestion d&apos;entreprise.
           </h1>
 
@@ -260,7 +260,10 @@ export default function Home() {
                   <h3 className="font-title text-2xl md:text-3xl text-[#f3dfc0] uppercase text-center mb-8">Pourquoi nous faire confiance</h3>
                   <div className="max-w-lg mx-auto space-y-5">
                     {["Confidentialité totale", "Respect des délais", "Qualité constante", "Collaboration fluide"].map((item) => (
-                      <div key={item} className="flex items-center gap-4 text-white text-base md:text-lg">
+                      <div
+                        key={item}
+                        className={`flex items-center gap-4 text-base md:text-lg ${theme === "dark" ? "text-white" : "text-slate-900"}`}
+                      >
                         <span className="w-9 h-9 flex-shrink-0 rounded-full border-2 border-gold grid place-items-center text-gold font-bold shadow-[0_0_0_4px_rgba(201,168,76,0.08)]">✓</span>
                         <span>{item}</span>
                       </div>
