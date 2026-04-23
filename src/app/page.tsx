@@ -37,25 +37,14 @@ export default function Home() {
   const [selectedOffer, setSelectedOffer] = useState<Offer | null>(null);
   const [showPartnershipModal, setShowPartnershipModal] = useState(false);
   const [theme, setTheme] = useState<"dark" | "light">("dark");
-  const [themeReady, setThemeReady] = useState(false);
   const scrollTo = useCallback((el: HTMLElement | null) => {
     if (el) smoothScrollTo(el);
   }, []);
 
   useEffect(() => {
-    const savedTheme = window.localStorage.getItem("theme");
-    if (savedTheme === "light" || savedTheme === "dark") {
-      setTheme(savedTheme);
-    }
-    setThemeReady(true);
-  }, []);
-
-  useEffect(() => {
-    if (!themeReady) return;
     const root = document.documentElement;
     root.classList.toggle("theme-light", theme === "light");
-    window.localStorage.setItem("theme", theme);
-  }, [theme, themeReady]);
+  }, [theme]);
 
   const handleOfferSelect = (offer: Offer) => {
     setSelectedOffer(offer);
@@ -119,9 +108,15 @@ export default function Home() {
               alt="World Gestion"
                 className="h-30 sm:h-30 md:h-35 w-auto flex-shrink-0"
             />
-            <div>
+            <div className="min-w-0">
               <span className="text-gold font-bold text-lg sm:text-2xl md:text-3xl tracking-wide block">World Gestion</span>
-              <span className="text-gold text-[11px] sm:text-xs md:text-sm leading-snug">Nous prenons en charge le traitement administratif<br />et votre pré-comptabilité avec expertise et rigueur</span>
+              <span className="block max-w-[220px] sm:max-w-none text-gold text-[11px] sm:text-xs md:text-sm leading-snug text-left">
+                Nous prenons en charge le traitement administratif
+                <span className="sm:hidden"> et votre pré-comptabilité avec expertise et rigueur</span>
+                <span className="hidden sm:inline">
+                  <br />et votre pré-comptabilité avec expertise et rigueur
+                </span>
+              </span>
             </div>
           </div>
 
@@ -137,10 +132,10 @@ export default function Home() {
           {/* CTA */}
           <div className="mt-5">
             <a
-              href="#offres"
+              href="#nos-offres"
               onClick={(e) => {
                 e.preventDefault();
-                scrollTo(document.getElementById("offres"));
+                scrollTo(document.getElementById("nos-offres"));
               }}
               className="btn-gold inline-block text-sm md:text-base"
             >
@@ -294,7 +289,7 @@ export default function Home() {
           </div>
 
           {/* ─── Offres ─── */}
-          <div className="mt-10">
+          <div id="nos-offres" className="mt-10">
             {isEntrepreneur ? (
               <>
                 <h2 className="font-title text-2xl md:text-3xl font-bold text-gold text-center mb-2">Nos Offres</h2>

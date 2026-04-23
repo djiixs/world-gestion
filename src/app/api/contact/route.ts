@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Resend } from "resend";
-
-const resend = new Resend(process.env.RESEND_API_KEY);
+import { sendEmail } from "@/lib/mailer";
 
 export async function POST(req: NextRequest) {
   try {
@@ -47,28 +45,29 @@ export async function POST(req: NextRequest) {
       <p style="margin-top:16px;font-size:13px;color:#64748b">Envoyé depuis le site World Gestion le ${new Date().toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" })}</p>
     `;
 
-    // Si Resend n'est pas configuré, log et retour succès
-    if (!process.env.RESEND_API_KEY || process.env.RESEND_API_KEY === "re_REPLACE_ME") {
-      console.log("[contact] Resend non configuré — demande enregistrée :", { cabinetName, email, offerId });
-      return NextResponse.json({ success: true });
-    }
-
-    const { error } = await resend.emails.send({
-      from: "World Gestion <onboarding@resend.dev>",
-      to: [contactEmail],
+    await sendEmail({
+      to: contactEmail,
       replyTo: email,
       subject: `Nouvelle demande cabinet — ${offerTitle} — ${cabinetName}`,
       html: htmlBody,
     });
 
-    if (error) {
-      console.error("[contact] Erreur Resend :", JSON.stringify(error));
-      // On retourne quand même success : la demande est reçue, l'erreur est dans les logs
-    }
-
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error("[contact] Erreur interne :", err);
+    const isAuthError =
+      typeof err === "object" &&
+      err !== null &&
+      "code" in err &&
+      (err as { code?: string }).code === "EAUTH";
+
+    if (isAuthError) {
+      return NextResponse.json(
+        { error: "Authentification SMTP échouée (OVH). Vérifie SMTP_USER et SMTP_PASS." },
+        { status: 502 }
+      );
+    }
+
     return NextResponse.json(
       { error: "Erreur interne" },
       { status: 500 }
