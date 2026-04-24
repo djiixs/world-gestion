@@ -17,6 +17,11 @@ export const metadata: Metadata = {
   title: "World Gestion — Votre partenaire comptable",
   description:
     "World Gestion accompagne les entrepreneurs et les cabinets comptables avec des offres sur mesure. Comptabilité, gestion sociale, conseil stratégique.",
+  icons: {
+    icon: "/icon.png",
+    apple: "/icon.png",
+    shortcut: "/icon.png",
+  },
 };
 
 export default function RootLayout({
