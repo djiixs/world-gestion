@@ -3,11 +3,13 @@ import path from "path";
 import crypto from "crypto";
 
 export type LeadType = "entrepreneur" | "cabinet";
+export type LeadState = "inbox" | "pinned" | "draft" | "deleted";
 export type PurchaseStatus = "initiated" | "succeeded" | "failed";
 
 export interface LeadRecord {
   id: string;
   createdAt: string;
+  state: LeadState;
   type: LeadType;
   offerId: string;
   offerTitle: string;
@@ -85,12 +87,20 @@ function createId(prefix: string) {
   return `${prefix}_${crypto.randomUUID()}`;
 }
 
-export async function addLead(input: Omit<LeadRecord, "id" | "createdAt">) {
+function normalizeLead(input: LeadRecord | (Omit<LeadRecord, "state"> & { state?: LeadState })): LeadRecord {
+  return {
+    ...input,
+    state: input.state ?? "inbox",
+  };
+}
+
+export async function addLead(input: Omit<LeadRecord, "id" | "createdAt" | "state">) {
   return enqueueWrite(async () => {
     const store = await readStore();
     const record: LeadRecord = {
       id: createId("lead"),
       createdAt: new Date().toISOString(),
+      state: "inbox",
       ...input,
     };
 
@@ -135,14 +145,48 @@ export async function updatePurchaseStatusByPaymentIntent(paymentIntentId: strin
 
 export async function getAdminDashboardData() {
   const store = await readStore();
+  const leads = store.leads.map((lead) => normalizeLead(lead));
 
   return {
-    leads: store.leads,
+    leads,
     purchases: store.purchases,
     stats: {
-      totalLeads: store.leads.length,
+      totalLeads: leads.filter((lead) => lead.state !== "deleted").length,
+      totalPinnedLeads: leads.filter((lead) => lead.state === "pinned").length,
+      totalDraftLeads: leads.filter((lead) => lead.state === "draft").length,
       totalPurchases: store.purchases.length,
       succeededPurchases: store.purchases.filter((item) => item.status === "succeeded").length,
     },
   };
+}
+
+export async function updateLeadStateById(leadId: string, nextState: LeadState) {
+  return enqueueWrite(async () => {
+    const store = await readStore();
+    const leadIndex = store.leads.findIndex((item) => item.id === leadId);
+
+    if (leadIndex === -1) {
+      return null;
+    }
+
+    const lead = store.leads[leadIndex];
+    const normalizedLead = normalizeLead(lead);
+
+    if (normalizedLead.state === nextState) {
+      return normalizedLead;
+    }
+
+    if (nextState === "deleted") {
+      const [deletedLead] = store.leads.splice(leadIndex, 1);
+      await writeStore(store);
+      return normalizeLead({
+        ...deletedLead,
+        state: "deleted",
+      });
+    }
+
+    lead.state = nextState;
+    await writeStore(store);
+    return normalizeLead(lead);
+  });
 }

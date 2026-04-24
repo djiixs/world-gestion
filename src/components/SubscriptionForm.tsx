@@ -7,6 +7,7 @@ import PaymentForm from "@/components/PaymentForm";
 interface Props {
   offer: Offer;
   onClose: () => void;
+  lightMode?: boolean;
 }
 
 interface FormData {
@@ -20,11 +21,14 @@ interface FormData {
 
 const STRIPE_ENABLED = process.env.NEXT_PUBLIC_STRIPE_ENABLED === "true";
 
-export default function SubscriptionForm({ offer, onClose }: Props) {
+export default function SubscriptionForm({ offer, onClose, lightMode = false }: Props) {
   const [step, setStep] = useState<"info" | "payment" | "success">("info");
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   const [clientSecret, setClientSecret] = useState("");
   const [formData, setFormData] = useState<FormData | null>(null);
+  const panelClass = lightMode
+    ? "rounded-2xl border border-[#d8c39a] bg-white p-5 sm:p-6 shadow-[0_16px_42px_rgba(15,23,42,0.16)]"
+    : "rounded-2xl border border-gold/25 bg-gradient-to-b from-[#111a35] to-[#0b132b] p-5 sm:p-6 shadow-[0_20px_60px_rgba(0,0,0,0.6),0_0_80px_rgba(201,168,76,0.06)]";
 
   const handleInfoSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -81,7 +85,7 @@ export default function SubscriptionForm({ offer, onClose }: Props) {
   // ─── SUCCESS SCREEN ───
   if (step === "success") {
     return (
-      <div className="rounded-2xl border border-gold/25 bg-gradient-to-b from-[#111a35] to-[#0b132b] p-5 sm:p-6 shadow-[0_20px_60px_rgba(0,0,0,0.6),0_0_80px_rgba(201,168,76,0.06)]">
+      <div className={panelClass}>
         <div className="text-center py-6">
           <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-gold/10 border border-gold/20 grid place-items-center">
             <svg className="h-7 w-7 text-gold" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
@@ -109,7 +113,7 @@ export default function SubscriptionForm({ offer, onClose }: Props) {
   // ─── PAYMENT STEP ───
   if (step === "payment" && clientSecret) {
     return (
-      <div className="rounded-2xl border border-gold/25 bg-gradient-to-b from-[#111a35] to-[#0b132b] p-5 sm:p-6 shadow-[0_20px_60px_rgba(0,0,0,0.6),0_0_80px_rgba(201,168,76,0.06)]">
+      <div className={panelClass}>
         {/* Header */}
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-2.5">
@@ -127,7 +131,7 @@ export default function SubscriptionForm({ offer, onClose }: Props) {
             type="button"
             onClick={onClose}
             aria-label="Fermer"
-            className="w-8 h-8 rounded-lg bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.08] hover:border-white/[0.15] transition-all duration-200 grid place-items-center text-foreground-muted hover:text-foreground"
+            className={`w-8 h-8 rounded-lg transition-all duration-200 grid place-items-center text-foreground-muted hover:text-foreground ${lightMode ? "bg-slate-100 border border-slate-200 hover:bg-slate-200" : "bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.08] hover:border-white/[0.15]"}`}
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
@@ -160,7 +164,7 @@ export default function SubscriptionForm({ offer, onClose }: Props) {
 
   // ─── INFO STEP ───
   return (
-    <div className="rounded-2xl border border-gold/25 bg-gradient-to-b from-[#111a35] to-[#0b132b] p-5 sm:p-6 shadow-[0_20px_60px_rgba(0,0,0,0.6),0_0_80px_rgba(201,168,76,0.06)]">
+    <div className={panelClass}>
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-2.5">
@@ -175,7 +179,7 @@ export default function SubscriptionForm({ offer, onClose }: Props) {
           type="button"
           onClick={onClose}
           aria-label="Fermer le formulaire"
-          className="w-8 h-8 rounded-lg bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.08] hover:border-white/[0.15] transition-all duration-200 grid place-items-center text-foreground-muted hover:text-foreground"
+          className={`w-8 h-8 rounded-lg transition-all duration-200 grid place-items-center text-foreground-muted hover:text-foreground ${lightMode ? "bg-slate-100 border border-slate-200 hover:bg-slate-200" : "bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.08] hover:border-white/[0.15]"}`}
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />

@@ -6,9 +6,10 @@ import { Offer } from "@/types/offers";
 interface Props {
   offer: Offer;
   onClose: () => void;
+  lightMode?: boolean;
 }
 
-export default function CabinetLeadForm({ offer, onClose }: Props) {
+export default function CabinetLeadForm({ offer, onClose, lightMode = false }: Props) {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -44,13 +45,13 @@ export default function CabinetLeadForm({ offer, onClose }: Props) {
 
   if (status === "success") {
     return (
-      <div className="rounded-[10px] border border-gold/30 bg-background-tertiary p-8 sm:p-10 text-center shadow-[0_10px_40px_rgba(0,0,0,0.5)]">
+      <div className={`rounded-[10px] border border-gold/30 p-8 sm:p-10 text-center ${lightMode ? "bg-white shadow-[0_12px_34px_rgba(15,23,42,0.14)]" : "bg-background-tertiary shadow-[0_10px_40px_rgba(0,0,0,0.5)]"}`}>
         <div className="w-16 h-16 mx-auto rounded-full bg-gold/10 border border-gold/30 flex items-center justify-center mb-6">
           <svg className="h-8 w-8 text-gold" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
           </svg>
         </div>
-        <p className="text-2xl font-bold text-white mb-2">Demande envoyée !</p>
+        <p className="text-2xl font-bold text-foreground mb-2">Demande envoyée !</p>
         <p className="mt-3 text-sm text-foreground-secondary leading-relaxed">
           Nous avons bien reçu votre demande pour un <strong className="text-foreground">{offer.title}</strong>.
           <br />Notre équipe vous contactera sous 24 heures pour discuter des modalités de partenariat.
@@ -63,11 +64,11 @@ export default function CabinetLeadForm({ offer, onClose }: Props) {
   }
 
   return (
-    <div className="bg-background-tertiary p-6 sm:p-8">
+    <div className={`p-6 sm:p-8 ${lightMode ? "bg-white" : "bg-background-tertiary"}`}>
       {/* Header */}
       <div className="flex items-start justify-between mb-7">
         <div>
-          <h3 className="text-xl font-bold text-white">{ctaLabel}</h3>
+          <h3 className="text-xl font-bold text-foreground">{ctaLabel}</h3>
           <p className="mt-2 text-sm text-foreground-secondary">
             Service : <span className="font-semibold text-gold">{offer.title}</span>
           </p>

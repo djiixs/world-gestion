@@ -3,13 +3,14 @@ import crypto from "crypto";
 export const ADMIN_COOKIE_NAME = "wg_admin_session";
 
 const SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 7;
+const MIN_SESSION_SECRET_LENGTH = 32;
 
 function getAdminCode() {
   return process.env.ADMIN_CODE ?? "";
 }
 
 function getSessionSecret() {
-  return process.env.ADMIN_SESSION_SECRET || getAdminCode();
+  return process.env.ADMIN_SESSION_SECRET ?? "";
 }
 
 function sign(payload: string) {
@@ -31,6 +32,10 @@ export function isAdminCodeConfigured() {
   return Boolean(getAdminCode());
 }
 
+export function isSessionSecretConfigured() {
+  return getSessionSecret().length >= MIN_SESSION_SECRET_LENGTH;
+}
+
 export function isAdminCodeValid(code: string) {
   const adminCode = getAdminCode();
   if (!adminCode || !code) {
@@ -41,6 +46,10 @@ export function isAdminCodeValid(code: string) {
 }
 
 export function createAdminSessionToken() {
+  if (!isSessionSecretConfigured()) {
+    throw new Error("ADMIN_SESSION_SECRET invalide");
+  }
+
   const issuedAt = Date.now();
   const nonce = crypto.randomBytes(12).toString("hex");
   const payload = `${issuedAt}.${nonce}`;
@@ -49,7 +58,7 @@ export function createAdminSessionToken() {
 }
 
 export function isAdminSessionTokenValid(token?: string) {
-  if (!token || !getSessionSecret()) {
+  if (!token || !isSessionSecretConfigured()) {
     return false;
   }
 
@@ -78,7 +87,7 @@ export function getAdminCookieOptions() {
   return {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "lax" as const,
+    sameSite: "strict" as const,
     path: "/",
     maxAge: SESSION_MAX_AGE_SECONDS,
   };
