@@ -43,12 +43,32 @@ interface AdminStore {
   purchases: PurchaseRecord[];
 }
 
-const STORE_FILE_PATH = path.join(process.cwd(), "data", "admin-store.json");
+const PROJECT_STORE_FILE_PATH = path.join(process.cwd(), "data", "admin-store.json");
+const STORE_FILE_PATH = process.env.VERCEL
+  ? path.join("/tmp", "world-gestion", "data", "admin-store.json")
+  : PROJECT_STORE_FILE_PATH;
 
 let writeQueue = Promise.resolve();
 
 function createInitialStore(): AdminStore {
   return { leads: [], purchases: [] };
+}
+
+function normalizeStore(parsed: Partial<AdminStore>): AdminStore {
+  return {
+    leads: Array.isArray(parsed.leads) ? parsed.leads : [],
+    purchases: Array.isArray(parsed.purchases) ? parsed.purchases : [],
+  };
+}
+
+async function loadInitialStoreForRuntime(): Promise<AdminStore> {
+  try {
+    const raw = await fs.readFile(PROJECT_STORE_FILE_PATH, "utf8");
+    const parsed = JSON.parse(raw) as Partial<AdminStore>;
+    return normalizeStore(parsed);
+  } catch {
+    return createInitialStore();
+  }
 }
 
 async function ensureStoreFile() {
@@ -58,7 +78,11 @@ async function ensureStoreFile() {
   try {
     await fs.access(STORE_FILE_PATH);
   } catch {
-    await fs.writeFile(STORE_FILE_PATH, JSON.stringify(createInitialStore(), null, 2), "utf8");
+    const initialStore = STORE_FILE_PATH === PROJECT_STORE_FILE_PATH
+      ? createInitialStore()
+      : await loadInitialStoreForRuntime();
+
+    await fs.writeFile(STORE_FILE_PATH, JSON.stringify(initialStore, null, 2), "utf8");
   }
 }
 
@@ -67,10 +91,7 @@ async function readStore(): Promise<AdminStore> {
   const raw = await fs.readFile(STORE_FILE_PATH, "utf8");
   const parsed = JSON.parse(raw) as Partial<AdminStore>;
 
-  return {
-    leads: Array.isArray(parsed.leads) ? parsed.leads : [],
-    purchases: Array.isArray(parsed.purchases) ? parsed.purchases : [],
-  };
+  return normalizeStore(parsed);
 }
 
 async function writeStore(store: AdminStore) {
