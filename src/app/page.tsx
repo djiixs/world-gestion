@@ -144,9 +144,9 @@ export default function Home() {
           </div>
 
           {/* Title */}
-          <h1 className={`font-title text-xl sm:text-4xl md:text-5xl font-bold leading-tight ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`}>
+          <h1 className={`font-title text-xl sm:text-4xl md:text-5xl font-bold leading-tight ${theme === "dark" ? "text-white" : "text-black"}`}>
             Simplifiez et optimisez votre<br />
-            <span className={theme === "dark" ? "text-gold" : "text-[#8a6120]"}>gestion d&apos;entreprise.</span>
+            <span className={theme === "dark" ? "text-white" : "text-black"}>gestion d&apos;entreprise.</span>
           </h1>
 
           {/* Subtitle */}
