@@ -18,9 +18,9 @@ export const metadata: Metadata = {
   description:
     "World Gestion accompagne les entrepreneurs et les cabinets comptables avec des offres sur mesure. Comptabilité, gestion sociale, conseil stratégique.",
   icons: {
-    icon: "/icon.png",
-    apple: "/icon.png",
-    shortcut: "/icon.png",
+    icon: "/favicon-world.png?v=20260426",
+    apple: "/favicon-world.png?v=20260426",
+    shortcut: "/favicon-world.png?v=20260426",
   },
 };
 
