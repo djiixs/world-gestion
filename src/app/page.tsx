@@ -374,9 +374,6 @@ export default function Home() {
             </a>
           </span>
         </div>
-        <div className="mt-3">
-          <a href="/admin/login" className="text-[11px] text-foreground/45 hover:text-gold transition-colors duration-200">Admin</a>
-        </div>
       </footer>
 
       {/* ─── MODAL PAIEMENT ─── */}
