@@ -36,8 +36,7 @@ export default function OfferToggle({ isEntrepreneur, onChange }: Props) {
   };
 
   return (
-    <div className="flex flex-col items-center gap-3 px-4">
-      <p className="text-sm font-medium text-foreground-secondary">Vous &ecirc;tes&nbsp;:</p>
+    <div className="flex items-center justify-center px-4">
       <div
         ref={containerRef}
         role="tablist"
@@ -64,7 +63,7 @@ export default function OfferToggle({ isEntrepreneur, onChange }: Props) {
               : "text-foreground-muted hover:text-foreground-secondary"
           }`}
         >
-          Entrepreneur
+          Entrepreneurs
         </button>
         <button
           ref={(el) => { btnRefs.current[1] = el; }}
@@ -78,7 +77,7 @@ export default function OfferToggle({ isEntrepreneur, onChange }: Props) {
               : "text-foreground-muted hover:text-foreground-secondary"
           }`}
         >
-          Cabinet comptable
+          Cabinets comptables
         </button>
       </div>
     </div>

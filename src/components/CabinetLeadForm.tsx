@@ -53,8 +53,8 @@ export default function CabinetLeadForm({ offer, onClose, lightMode = false }: P
         </div>
         <p className="text-2xl font-bold text-foreground mb-2">Demande envoyée !</p>
         <p className="mt-3 text-sm text-foreground-secondary leading-relaxed">
-          J’ai bien reçu votre demande pour un <strong className="text-foreground">{offer.title}</strong>.
-          <br />Je vous contacterai sous 24 heures pour discuter des modalités de partenariat.
+          Nous avons bien reçu votre demande pour un <strong className="text-foreground">{offer.title}</strong>.
+          <br />Notre équipe vous contactera sous 24 heures pour discuter des modalités de partenariat.
         </p>
         <button onClick={onClose} className="mt-6 px-6 py-2.5 bg-gold text-white font-semibold rounded-lg hover:bg-gold-dark transition-colors duration-200">
           Fermer

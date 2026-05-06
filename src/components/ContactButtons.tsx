@@ -17,7 +17,7 @@ export default function ContactButtons() {
 
       {/* Email */}
       <a
-        href="mailto:support@worldgestion.fr"
+        href="mailto:contact@worldgestion.fr"
         className="card-hover group flex flex-col items-center gap-3 rounded-2xl border border-border/80 bg-white p-6"
       >
         <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/[0.07] text-primary transition-colors duration-300 group-hover:bg-primary group-hover:text-white">
@@ -25,7 +25,7 @@ export default function ContactButtons() {
             <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
           </svg>
         </span>
-        <span className="font-semibold text-foreground tracking-tight">support@worldgestion.fr</span>
+        <span className="font-semibold text-foreground tracking-tight">contact@worldgestion.fr</span>
         <span className="text-sm text-foreground/40">Réponse sous 24h</span>
       </a>
 

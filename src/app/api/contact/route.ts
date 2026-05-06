@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { addLead } from "@/lib/admin-store";
-import { sendEmail } from "@/lib/mailer";
 
 export async function POST(req: NextRequest) {
   try {
@@ -34,31 +33,6 @@ export async function POST(req: NextRequest) {
       nbDossiers: nbDossiers || undefined,
       note: message || undefined,
     });
-
-    const adminEmail = process.env.ADMIN_NOTIFY_EMAIL ?? "support@worldgestion.fr";
-
-    await sendEmail({
-      to: adminEmail,
-      subject: `Nouveau partenariat cabinet — ${cabinetName}`,
-      html: `
-        <div style="font-family:sans-serif;max-width:560px;margin:0 auto;color:#1a1a1a;">
-          <h2 style="color:#b8962e;margin-bottom:4px;">Nouvelle demande de partenariat cabinet</h2>
-          <p style="color:#666;margin-top:0;">World Gestion — notification automatique</p>
-          <table style="width:100%;border-collapse:collapse;margin-top:16px;">
-            <tr><td style="padding:6px 0;color:#666;width:140px;">Cabinet</td><td style="padding:6px 0;font-weight:600;">${cabinetName}</td></tr>
-            <tr><td style="padding:6px 0;color:#666;">Responsable</td><td style="padding:6px 0;">${responsableName}</td></tr>
-            <tr><td style="padding:6px 0;color:#666;">Email</td><td style="padding:6px 0;"><a href="mailto:${email}" style="color:#b8962e;">${email}</a></td></tr>
-            <tr><td style="padding:6px 0;color:#666;">Téléphone</td><td style="padding:6px 0;">${phone}</td></tr>
-            <tr><td style="padding:6px 0;color:#666;">Offre</td><td style="padding:6px 0;font-weight:600;">${offerTitle || offerId}</td></tr>
-            ${nbDossiers ? `<tr><td style="padding:6px 0;color:#666;">Nb dossiers/mois</td><td style="padding:6px 0;">${nbDossiers}</td></tr>` : ""}
-            ${message ? `<tr><td style="padding:6px 0;color:#666;vertical-align:top;">Message</td><td style="padding:6px 0;">${message}</td></tr>` : ""}
-          </table>
-          <hr style="margin:20px 0;border:none;border-top:1px solid #e5e5e5;" />
-          <p style="font-size:12px;color:#999;">Consultez le détail dans l'<a href="https://worldgestion.fr/admin" style="color:#b8962e;">espace admin</a>.</p>
-        </div>
-      `,
-      replyTo: email,
-    }).catch((err) => console.error("[contact] Notif email échouée :", err));
 
     return NextResponse.json({ success: true });
   } catch (err) {

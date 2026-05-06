@@ -97,9 +97,9 @@ export default function SubscriptionForm({ offer, onClose, lightMode = false }: 
           </h3>
           <p className="mt-2 text-sm text-foreground-secondary max-w-sm mx-auto">
             {STRIPE_ENABLED ? (
-              <>Merci pour votre souscription à l&apos;offre <strong className="text-foreground">{offer.title}</strong>. Je vous envoie un email de confirmation.</>
+              <>Merci pour votre souscription à l&apos;offre <strong className="text-foreground">{offer.title}</strong>. Nous vous envoyons un email de confirmation.</>
             ) : (
-              <>Merci pour votre intérêt pour l&apos;offre <strong className="text-foreground">{offer.title}</strong>. Je vous recontacte très rapidement pour finaliser votre souscription.</>
+              <>Merci pour votre intérêt pour l&apos;offre <strong className="text-foreground">{offer.title}</strong>. Nous vous recontactons très rapidement pour finaliser votre souscription.</>
             )}
           </p>
           <button onClick={onClose} className="mt-5 btn-gold text-sm">

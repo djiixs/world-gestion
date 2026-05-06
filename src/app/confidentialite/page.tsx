@@ -43,8 +43,8 @@ export default function ConfidentialitePage() {
               <li><strong className="text-foreground">Raison sociale :</strong> World Gestion</li>
               <li><strong className="text-foreground">Adresse :</strong> [Adresse à compléter]</li>
               <li><strong className="text-foreground">Email :</strong>{" "}
-                <a href="mailto:support@worldgestion.fr" className="text-gold hover:text-gold-light">
-                  support@worldgestion.fr
+                <a href="mailto:contact@worldgestion.fr" className="text-gold hover:text-gold-light">
+                  contact@worldgestion.fr
                 </a>
               </li>
               <li><strong className="text-foreground">Téléphone :</strong>{" "}
@@ -124,8 +124,8 @@ export default function ConfidentialitePage() {
             </ul>
             <p className="mt-3">
               Pour exercer vos droits, contactez-nous à{" "}
-              <a href="mailto:support@worldgestion.fr" className="text-gold hover:text-gold-light">
-                support@worldgestion.fr
+              <a href="mailto:contact@worldgestion.fr" className="text-gold hover:text-gold-light">
+                contact@worldgestion.fr
               </a>. Nous répondrons dans un délai maximum de 30 jours.
             </p>
             <p className="mt-2">
@@ -171,7 +171,7 @@ export default function ConfidentialitePage() {
             <h2 className="text-lg font-semibold text-foreground mb-3">12. Contact</h2>
             <p>Pour toute question relative à la protection de vos données :</p>
             <ul className="mt-2 space-y-1">
-              <li>Email : <a href="mailto:support@worldgestion.fr" className="text-gold hover:text-gold-light">support@worldgestion.fr</a></li>
+              <li>Email : <a href="mailto:contact@worldgestion.fr" className="text-gold hover:text-gold-light">contact@worldgestion.fr</a></li>
               <li>Téléphone : <a href="tel:+33756434016" className="text-gold hover:text-gold-light">07 56 43 40 16</a></li>
             </ul>
           </section>

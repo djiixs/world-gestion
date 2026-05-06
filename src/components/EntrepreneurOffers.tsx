@@ -1,7 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import { Offer } from "@/types/offers";
 import { cn } from "@/lib/utils";
+import entrepreneurPortrait from "../../images/43b615a70c7a737beaa28ccedf09e36c.jpg";
 
 interface Props {
   offers: Offer[];
@@ -13,65 +15,74 @@ export default function EntrepreneurOffers({ offers, onSelect, theme }: Props) {
   // Separate subscription offers from one-time offers
   const subscriptionOffers = offers.filter((o) => o.priceUnit !== "/heure");
   const hourlyOffers = offers.filter((o) => o.priceUnit === "/heure");
+  const showAboutSection = hourlyOffers.length > 0;
 
   return (
     <div className="space-y-4">
       {/* Subscription offers — horizontal scroll on mobile, grid on desktop */}
       <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-3 pt-3 -mx-6 px-6 md:mx-0 md:px-0 md:grid md:grid-cols-3 md:overflow-visible md:pb-0 md:pt-0 md:snap-none">
-        {subscriptionOffers.map((offer, idx) => (
+        {subscriptionOffers.map((offer) => (
           <div key={offer.id} className="min-w-[75vw] sm:min-w-[55vw] md:min-w-0 snap-center">
-            <OfferCard
-              offer={offer}
-              onSelect={onSelect}
-              theme={theme}
-              previousOfferTitle={idx > 0 ? subscriptionOffers[idx - 1].title : undefined}
-            />
+            <OfferCard offer={offer} onSelect={onSelect} theme={theme} />
           </div>
         ))}
       </div>
 
-      {/* Hourly / one-time offer — compact full width */}
-      {hourlyOffers.map((offer) => (
-        <div key={offer.id} className="space-y-3">
-          <div
-            className="card-hover rounded-[10px] border border-border-gold bg-background-tertiary px-5 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4"
-          >
-            <div className="flex items-center gap-3 min-w-0">
-              <div>
-                <div className="flex items-center gap-2">
-                  <h3 className="text-sm font-bold text-foreground">{offer.title}</h3>
-                  {offer.tag && (
-                    <span className={`rounded-full bg-gold/15 px-2 py-0.5 text-[10px] font-semibold ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`}>
-                      {offer.tag}
+      <p className={`px-1 text-center text-sm ${theme === "dark" ? "text-foreground-muted" : "text-[#666]"}`}>
+        <span className="inline-flex items-center gap-2">
+          <span className={`grid h-5 w-5 place-items-center rounded-full text-[11px] ${theme === "dark" ? "bg-gold/10 text-gold" : "bg-[#ff7f50]/10 text-[#ff7f50]"}`}>
+            i
+          </span>
+          <span>Chaque offre inclus les service de l&apos;offre precedente.</span>
+        </span>
+      </p>
+
+      {showAboutSection && (
+        <div className="pt-8">
+          <section className="mx-auto flex max-w-6xl flex-col-reverse items-center justify-between gap-10 md:flex-row md:gap-14">
+            <div className="flex-1 text-center md:text-left">
+              <h2 className={`font-title text-2xl md:text-3xl font-bold ${theme === "dark" ? "text-gold" : "text-[#1a2a44]"}`}>
+                Pourquoi travailler avec moi ?
+              </h2>
+              <div className={`mt-3 h-[2px] w-10 rounded-full bg-gold ${theme === "dark" ? "md:ml-0" : "md:ml-0"} mx-auto md:mx-0`} />
+
+              <ul className="mt-8 space-y-4">
+                {[
+                  "Un interlocuteur unique et dedie",
+                  "Une relation humaine et de confiance",
+                  "Une grande reactivite",
+                  "Une adaptation a votre activite",
+                ].map((item) => (
+                  <li key={item} className={`flex items-center justify-center gap-4 text-base md:justify-start md:text-[1.05rem] ${theme === "dark" ? "text-foreground" : "text-[#333]"}`}>
+                    <span className={`flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full border text-xs ${theme === "dark" ? "border-gold/50 text-gold" : "border-[#ff7f50]/70 text-[#ff7f50]"}`}>
+                      ✓
                     </span>
-                  )}
-                </div>
-                <p className="mt-0.5 text-xs text-foreground-muted">{offer.description}</p>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+
+            </div>
+
+            <div className="flex-1">
+              <div
+                className="relative mx-auto w-full max-w-[560px] overflow-hidden rounded-[8px]"
+                style={{
+                  maskImage: "radial-gradient(ellipse at center, black 30%, transparent 75%)",
+                  WebkitMaskImage: "radial-gradient(ellipse at center, black 30%, transparent 75%)",
+                }}
+              >
+                <Image
+                  src={entrepreneurPortrait}
+                  alt="Portrait professionnel"
+                  className={`block h-auto w-full object-cover ${theme === "dark" ? "opacity-35" : "opacity-45"}`}
+                  priority={false}
+                />
               </div>
             </div>
-            <div className="flex items-center gap-4 flex-shrink-0 w-full sm:w-auto justify-between sm:justify-end">
-              <p className="text-right">
-                <span className={`text-xl font-extrabold ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`}>{offer.priceLabel}</span>
-                <span className="text-xs font-medium text-foreground-muted">{offer.priceUnit}</span>
-              </p>
-              <button
-                onClick={() => onSelect(offer)}
-                className="rounded-lg bg-gold px-5 py-2 text-xs font-semibold text-white hover:bg-gold-dark active:scale-[0.98] transition-all duration-200"
-              >
-                {offer.cta || "Choisir"}
-              </button>
-            </div>
-          </div>
-          <div className="px-1 text-center text-xs text-foreground-muted">
-            <p className="font-medium text-foreground-secondary">Sans engagement • Toutes les prestations sont adaptables selon votre activité</p>
-            <div className="mt-2 flex items-center justify-center gap-3 text-foreground-muted">
-              <p className={`font-semibold ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`}>support@worldgestion.fr</p>
-              <span className="text-foreground-muted">•</span>
-              <p className={`font-semibold ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`}>0756434016</p>
-            </div>
-          </div>
+          </section>
         </div>
-      ))}
+      )}
     </div>
   );
 }
@@ -80,12 +91,10 @@ function OfferCard({
   offer,
   onSelect,
   theme,
-  previousOfferTitle,
 }: {
   offer: Offer;
   onSelect: (offer: Offer) => void;
   theme: "dark" | "light";
-  previousOfferTitle?: string;
 }) {
   return (
     <div
@@ -106,18 +115,6 @@ function OfferCard({
       <p className="mt-1 text-xs text-foreground-secondary leading-relaxed">
         {offer.description}
       </p>
-      {previousOfferTitle && (
-        <p className={`mt-2 flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-[10px] font-medium ${
-          theme === "dark"
-            ? "bg-gold/10 text-gold/80"
-            : "bg-[#8a6120]/10 text-[#8a6120]/80"
-        }`}>
-          <svg className="h-3 w-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z" clipRule="evenodd" />
-          </svg>
-          Inclut tout l&apos;offre <span className="font-semibold">{previousOfferTitle}</span>, plus&nbsp;:
-        </p>
-      )}
       <p className="mt-4">
         <span className={`text-2xl font-extrabold ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`}>
           {offer.priceLabel}
