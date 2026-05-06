@@ -123,6 +123,16 @@ export default function AdminLeadsSections({ leads: initialLeads }: Props) {
   };
 
   const pinnedCount = grouped.inbox.filter((l) => l.state === "pinned").length;
+  const entrepreneurCount = leads.filter((lead) => lead.state !== "deleted" && lead.type === "entrepreneur").length;
+  const cabinetCount = leads.filter((lead) => lead.state !== "deleted" && lead.type === "cabinet").length;
+  const recentLeadCount = leads.filter((lead) => {
+    if (lead.state === "deleted") {
+      return false;
+    }
+
+    const createdAt = new Date(lead.createdAt).getTime();
+    return Date.now() - createdAt <= 1000 * 60 * 60 * 24 * 7;
+  }).length;
   const summaryByTab = {
     inbox: {
       title: "Demandes",
@@ -259,88 +269,123 @@ export default function AdminLeadsSections({ leads: initialLeads }: Props) {
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center gap-2">
-        <button
-          type="button"
-          onClick={() => setActiveTab("inbox")}
-          className={`rounded-lg px-3 py-2 text-sm font-semibold transition-colors flex items-center gap-2 ${
-            activeTab === "inbox" ? "bg-gold text-[#0b132b]" : "border border-border text-foreground-secondary hover:bg-background-secondary"
-          }`}
-        >
-          <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M3 5a2 2 0 012-2h3.28a1 1 0 00.948-.684l1.498-4.493a1 1 0 011.502 0l1.498 4.493a1 1 0 00.948.684H19a2 2 0 012 2v2H3V5zm0 5v8a2 2 0 002 2h14a2 2 0 002-2v-8H3z" />
-          </svg>
-          {tabLabels.inbox}
-        </button>
-        <button
-          type="button"
-          onClick={() => setActiveTab("draft")}
-          className={`rounded-lg px-3 py-2 text-sm font-semibold transition-colors flex items-center gap-2 ${
-            activeTab === "draft" ? "bg-gold text-[#0b132b]" : "border border-border text-foreground-secondary hover:bg-background-secondary"
-          }`}
-        >
-          <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M9 12h6m-6 4h6m2-8H7a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2V10a2 2 0 00-2-2zm-2-4h4a1 1 0 010 2h-4a1 1 0 010-2z" />
-          </svg>
-          {tabLabels.draft}
-        </button>
-        <button
-          type="button"
-          onClick={() => setSortOrder((prev) => (prev === "newest" ? "oldest" : "newest"))}
-          className="ml-auto inline-flex items-center gap-1.5 rounded-md border border-border px-2 py-1 text-xs font-semibold text-foreground-secondary transition-colors hover:border-gold/40 hover:text-gold"
-          aria-label="Changer le tri par date"
-          title="Changer le tri par date"
-        >
-          {sortOrder === "newest" ? (
-            <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M7 4v16" />
-              <path d="M4 17l3 3 3-3" />
-              <path d="M13 7h7" />
-              <path d="M13 12h5" />
-              <path d="M13 17h3" />
-            </svg>
-          ) : (
-            <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M7 4v16" />
-              <path d="M4 7l3-3 3 3" />
-              <path d="M13 7h3" />
-              <path d="M13 12h5" />
-              <path d="M13 17h7" />
-            </svg>
-          )}
-          {sortOrder === "newest" ? "Plus récent" : "Plus ancien"}
-        </button>
-      </div>
+      <section className="rounded-[28px] border border-gold/15 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02))] p-4 shadow-[0_16px_44px_rgba(0,0,0,0.18)] sm:p-6">
+        <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-gold/85">Pilotage</p>
+              <h2 className="mt-2 font-title text-2xl text-foreground sm:text-[2rem]">Vue d'ensemble des demandes</h2>
+              <p className="mt-2 max-w-2xl text-sm text-foreground-secondary">Retrouvez ici les demandes actives, les brouillons et les priorités du moment dans un espace plus lisible.</p>
+            </div>
 
-      <section className="rounded-2xl border border-border bg-background-tertiary p-4 sm:p-5">
-        <div key={activeTab} className="animate-[slideSide_280ms_cubic-bezier(0.22,1,0.36,1)]">
-          <p className="text-sm text-foreground-muted">{activeSummary.title}</p>
-          <p className="mt-1 text-3xl font-bold text-foreground">{activeSummary.count}</p>
-          <p className="mt-2 text-xs text-foreground-muted">{activeSummary.meta}</p>
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setActiveTab("inbox")}
+                className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold transition-all ${
+                  activeTab === "inbox"
+                    ? "border-gold bg-gold text-[#0b132b] shadow-[0_10px_22px_rgba(201,168,76,0.22)]"
+                    : "border-border bg-background/40 text-foreground-secondary hover:border-gold/35 hover:text-gold"
+                }`}
+              >
+                <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M3 5a2 2 0 012-2h3.28a1 1 0 00.948-.684l1.498-4.493a1 1 0 011.502 0l1.498 4.493a1 1 0 00.948.684H19a2 2 0 012 2v2H3V5zm0 5v8a2 2 0 002 2h14a2 2 0 002-2v-8H3z" />
+                </svg>
+                {tabLabels.inbox}
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab("draft")}
+                className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold transition-all ${
+                  activeTab === "draft"
+                    ? "border-gold bg-gold text-[#0b132b] shadow-[0_10px_22px_rgba(201,168,76,0.22)]"
+                    : "border-border bg-background/40 text-foreground-secondary hover:border-gold/35 hover:text-gold"
+                }`}
+              >
+                <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M9 12h6m-6 4h6m2-8H7a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2V10a2 2 0 00-2-2zm-2-4h4a1 1 0 010 2h-4a1 1 0 010-2z" />
+                </svg>
+                {tabLabels.draft}
+              </button>
+              <button
+                type="button"
+                onClick={() => setSortOrder((prev) => (prev === "newest" ? "oldest" : "newest"))}
+                className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background/40 px-3 py-2 text-xs font-semibold text-foreground-secondary transition-colors hover:border-gold/40 hover:text-gold"
+                aria-label="Changer le tri par date"
+                title="Changer le tri par date"
+              >
+                {sortOrder === "newest" ? (
+                  <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M7 4v16" />
+                    <path d="M4 17l3 3 3-3" />
+                    <path d="M13 7h7" />
+                    <path d="M13 12h5" />
+                    <path d="M13 17h3" />
+                  </svg>
+                ) : (
+                  <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M7 4v16" />
+                    <path d="M4 7l3-3 3 3" />
+                    <path d="M13 7h3" />
+                    <path d="M13 12h5" />
+                    <path d="M13 17h7" />
+                  </svg>
+                )}
+                {sortOrder === "newest" ? "Plus récent" : "Plus ancien"}
+              </button>
+            </div>
+          </div>
+
+          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+            <div className="rounded-2xl border border-gold/15 bg-background/50 p-4">
+              <p className="text-xs uppercase tracking-[0.24em] text-foreground-muted">{activeSummary.title}</p>
+              <p className="mt-3 text-3xl font-bold text-foreground">{activeSummary.count}</p>
+              <p className="mt-2 text-xs text-foreground-muted">{activeSummary.meta}</p>
+            </div>
+            <div className="rounded-2xl border border-gold/15 bg-background/50 p-4">
+              <p className="text-xs uppercase tracking-[0.24em] text-foreground-muted">Entrepreneurs</p>
+              <p className="mt-3 text-3xl font-bold text-foreground">{entrepreneurCount}</p>
+              <p className="mt-2 text-xs text-foreground-muted">Demandes independants et entrepreneurs</p>
+            </div>
+            <div className="rounded-2xl border border-gold/15 bg-background/50 p-4">
+              <p className="text-xs uppercase tracking-[0.24em] text-foreground-muted">Cabinets</p>
+              <p className="mt-3 text-3xl font-bold text-foreground">{cabinetCount}</p>
+              <p className="mt-2 text-xs text-foreground-muted">Opportunites de partenariats cabinet</p>
+            </div>
+            <div className="rounded-2xl border border-gold/15 bg-background/50 p-4">
+              <p className="text-xs uppercase tracking-[0.24em] text-foreground-muted">7 derniers jours</p>
+              <p className="mt-3 text-3xl font-bold text-foreground">{recentLeadCount}</p>
+              <p className="mt-2 text-xs text-foreground-muted">Rythme recent des prises de contact</p>
+            </div>
+          </div>
         </div>
       </section>
 
-      <section className="rounded-2xl border border-border bg-background-tertiary p-4 sm:p-5">
+      <section className="rounded-[28px] border border-border bg-background-tertiary/90 p-4 shadow-[0_16px_40px_rgba(0,0,0,0.12)] sm:p-5">
         <div key={activeTab} className="animate-[slideSide_280ms_cubic-bezier(0.22,1,0.36,1)] overflow-x-auto">
           <table className="w-full min-w-[920px] text-sm">
           <thead>
-            <tr className="border-b border-gold/25">
-              <th className="px-2 py-2 text-left font-semibold text-foreground-muted">Date</th>
-              <th className="px-2 py-2 text-left font-semibold text-foreground-muted">Type</th>
-              <th className="px-2 py-2 text-left font-semibold text-foreground-muted">Nom</th>
-              <th className="px-2 py-2 text-left font-semibold text-foreground-muted">Email</th>
-              <th className="px-2 py-2 text-left font-semibold text-foreground-muted">Telephone</th>
-              <th className="px-2 py-2 text-left font-semibold text-foreground-muted">Offre</th>
-              <th className="px-2 py-2 text-left font-semibold text-foreground-muted">Note</th>
-              <th className="px-2 py-2 text-left font-semibold text-foreground-muted">Actions</th>
+            <tr className="border-b border-gold/20">
+              <th className="px-3 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.22em] text-foreground-muted">Date</th>
+              <th className="px-3 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.22em] text-foreground-muted">Type</th>
+              <th className="px-3 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.22em] text-foreground-muted">Nom</th>
+              <th className="px-3 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.22em] text-foreground-muted">Email</th>
+              <th className="px-3 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.22em] text-foreground-muted">Telephone</th>
+              <th className="px-3 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.22em] text-foreground-muted">Offre</th>
+              <th className="px-3 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.22em] text-foreground-muted">Note</th>
+              <th className="px-3 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.22em] text-foreground-muted">Actions</th>
             </tr>
           </thead>
           <tbody>
             {activeItems.map((lead) => (
-              <tr key={lead.id} className="border-b border-gold/25 align-top">
-                <td className="px-2 py-2 text-foreground-secondary">{formatDate(lead.createdAt)}</td>
-                <td className="px-2 py-2 text-foreground-secondary">{lead.type}</td>
-                <td className="px-2 py-2 text-foreground">
+              <tr key={lead.id} className="border-b border-white/6 align-top transition-colors hover:bg-white/[0.02]">
+                <td className="px-3 py-3 text-foreground-secondary">{formatDate(lead.createdAt)}</td>
+                <td className="px-3 py-3 text-foreground-secondary">
+                  <span className={`inline-flex rounded-full px-2.5 py-1 text-[11px] font-semibold ${lead.type === "cabinet" ? "bg-gold/12 text-gold" : "bg-white/8 text-foreground"}`}>
+                    {lead.type === "cabinet" ? "Cabinet" : "Entrepreneur"}
+                  </span>
+                </td>
+                <td className="px-3 py-3 text-foreground">
                   <div className="flex items-center gap-2">
                     {lead.state === "pinned" && (
                       <svg className="h-4 w-4 flex-shrink-0 text-gold animate-pulse" fill="currentColor" viewBox="0 0 24 24">
@@ -351,19 +396,19 @@ export default function AdminLeadsSections({ leads: initialLeads }: Props) {
                     <CopyButton value={renderLeadName(lead)} />
                   </div>
                 </td>
-                <td className="px-2 py-2">
+                <td className="px-3 py-3">
                   <div className="flex items-center gap-2">
                     <a href={`mailto:${lead.email}`} className="text-gold hover:underline">{lead.email}</a>
                     <CopyButton value={lead.email} />
                   </div>
                 </td>
-                <td className="px-2 py-2">
+                <td className="px-3 py-3">
                   <div className="flex items-center gap-2">
                     {lead.phone ? <a href={`tel:${lead.phone}`} className="text-gold hover:underline">{lead.phone}</a> : "-"}
                     {lead.phone ? <CopyButton value={lead.phone} /> : null}
                   </div>
                 </td>
-                <td className="px-2 py-2 text-foreground-secondary">
+                <td className="px-3 py-3 text-foreground-secondary">
                   <button
                     type="button"
                     onMouseEnter={(event) => {
@@ -400,13 +445,13 @@ export default function AdminLeadsSections({ leads: initialLeads }: Props) {
                     {lead.offerTitle}
                   </button>
                 </td>
-                <td className="px-2 py-2 text-foreground-secondary">{lead.note || "-"}</td>
-                <td className="px-2 py-2">{renderActionMenu(lead.id, lead.state)}</td>
+                <td className="px-3 py-3 text-foreground-secondary">{lead.note || "-"}</td>
+                <td className="px-3 py-3">{renderActionMenu(lead.id, lead.state)}</td>
               </tr>
             ))}
             {activeItems.length === 0 && (
               <tr>
-                <td className="px-2 py-4 text-foreground-muted" colSpan={8}>
+                <td className="px-3 py-10 text-center text-foreground-muted" colSpan={8}>
                   Aucune demande dans cette section.
                 </td>
               </tr>

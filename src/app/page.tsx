@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState, useCallback, useEffect } from "react";
 import EntrepreneurOffers from "@/components/EntrepreneurOffers";
 import SubscriptionForm from "@/components/SubscriptionForm";
@@ -7,6 +8,7 @@ import CabinetLeadForm from "@/components/CabinetLeadForm";
 
 import { entrepreneurOffers } from "@/data/entrepreneurOffers";
 import { Offer } from "@/types/offers";
+import cabinetCtaImage from "../../images/d37a60030ad57419d49021b8940fee46.jpg";
 
 function smoothScrollTo(target: HTMLElement, duration = 600) {
   const start = window.scrollY;
@@ -171,7 +173,7 @@ export default function Home() {
           <div className="mx-auto mt-8 max-w-7xl space-y-10">
             <div className={`rounded-[12px] border px-6 py-8 md:px-10 md:py-10 ${theme === "dark" ? "border-[rgba(201,168,76,0.08)] bg-[#0e1731]" : "border-[rgba(26,42,68,0.06)] bg-white shadow-[0_18px_60px_rgba(15,23,42,0.08)]"}`}>
               <h2 className={`font-title text-2xl md:text-3xl font-bold text-center ${theme === "dark" ? "text-gold" : "text-[#1a2a44]"}`}>
-                Vous êtes ?
+                Vous êtes :
               </h2>
               <div className="mx-auto mt-3 h-[2px] w-12 rounded-full bg-gold" />
 
@@ -345,83 +347,179 @@ export default function Home() {
                 </div>
               </>
             ) : (
-              <div className="space-y-12">
-                <div className="text-center">
-                  <h2 className={`font-title text-3xl md:text-4xl font-bold uppercase leading-tight mb-4 ${theme === "dark" ? "text-[#f6e8d5]" : "text-[#8a6120]"}`}>
-                    Externalisation comptable<br />pour cabinets
-                  </h2>
-                  <p className="text-foreground-secondary text-base md:text-lg max-w-xl mx-auto">
-                    Optimisez votre productivité avec un partenaire fiable et structuré
-                  </p>
-                </div>
+              <div className="space-y-14">
+                <div className={`rounded-[18px] border px-6 py-10 md:px-10 md:py-12 ${theme === "dark" ? "border-white/8 bg-[#142038] text-white" : "border-[rgba(26,42,68,0.08)] bg-[#5f7290] text-white"}`}>
+                  <h2 className="font-title text-center text-2xl md:text-3xl font-bold">Les avantages pour votre cabinet</h2>
+                  <div className="mx-auto mt-3 h-[2px] w-10 rounded-full bg-gold" />
 
-                <div className="relative">
-                  <div className="h-px bg-gradient-to-r from-transparent via-gold to-transparent opacity-70" />
-                  <div className="w-3 h-3 mx-auto -mt-1.5 rounded-full bg-gold shadow-[0_0_20px_rgba(201,168,76,0.7)]" />
-                </div>
-
-                <div className="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-3 -mx-6 px-6 md:mx-0 md:px-0 md:grid md:grid-cols-5 md:overflow-visible md:pb-0 md:snap-none">
-                  <div className="card-hover rounded-2xl border border-white/[0.12] p-5 text-center min-w-[40vw] md:min-w-0 snap-center min-h-[180px]" style={{ background: "linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03))" }}>
-                    <div className="w-16 h-16 mx-auto mb-4 rounded-2xl border border-gold/20 bg-gold/[0.06] grid place-items-center text-gold"><svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" /></svg></div>
-                    <h3 className={`font-title text-lg mb-1 ${theme === "dark" ? "text-[#f3e0c7]" : "text-[#9a6a1f]"}`}>Saisie comptable</h3>
-                    <p className="text-foreground-muted text-sm">Traitement structuré et précis</p>
-                  </div>
-                  <div className="card-hover rounded-2xl border border-white/[0.12] p-5 text-center min-w-[40vw] md:min-w-0 snap-center min-h-[180px]" style={{ background: "linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03))" }}>
-                    <div className="w-16 h-16 mx-auto mb-4 rounded-2xl border border-gold/20 bg-gold/[0.06] grid place-items-center text-gold"><svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182" /></svg></div>
-                    <h3 className={`font-title text-lg mb-1 ${theme === "dark" ? "text-[#f3e0c7]" : "text-[#9a6a1f]"}`}>Lettrage</h3>
-                    <p className="text-foreground-muted text-sm">Suivi clients / fournisseurs</p>
-                  </div>
-                  <div className="card-hover rounded-2xl border border-white/[0.12] p-5 text-center min-w-[40vw] md:min-w-0 snap-center min-h-[180px]" style={{ background: "linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03))" }}>
-                    <div className="w-16 h-16 mx-auto mb-4 rounded-2xl border border-gold/20 bg-gold/[0.06] grid place-items-center text-gold"><svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0 0 12 9.75c-2.551 0-5.056.2-7.5.582V21" /></svg></div>
-                    <h3 className={`font-title text-lg mb-1 ${theme === "dark" ? "text-[#f3e0c7]" : "text-[#9a6a1f]"}`}>Rapprochements bancaires</h3>
-                    <p className="text-foreground-muted text-sm">Fiabilité et contrôle</p>
-                  </div>
-                  <div className="card-hover rounded-2xl border border-white/[0.12] p-5 text-center min-w-[40vw] md:min-w-0 snap-center min-h-[180px]" style={{ background: "linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03))" }}>
-                    <div className="w-16 h-16 mx-auto mb-4 rounded-2xl border border-gold/20 bg-gold/[0.06] grid place-items-center text-gold"><svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" /></svg></div>
-                    <h3 className={`font-title text-lg mb-1 ${theme === "dark" ? "text-[#f3e0c7]" : "text-[#9a6a1f]"}`}>Préparation TVA</h3>
-                    <p className="text-foreground-muted text-sm">Éléments prêts à déclarer</p>
-                  </div>
-                  <div className="card-hover rounded-2xl border border-white/[0.12] p-5 text-center min-w-[40vw] md:min-w-0 snap-center min-h-[180px]" style={{ background: "linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03))" }}>
-                    <div className="w-16 h-16 mx-auto mb-4 rounded-2xl border border-gold/20 bg-gold/[0.06] grid place-items-center text-gold"><svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12.75V12A2.25 2.25 0 0 1 4.5 9.75h15A2.25 2.25 0 0 1 21.75 12v.75m-8.69-6.44-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z" /></svg></div>
-                    <h3 className={`font-title text-lg mb-1 ${theme === "dark" ? "text-[#f3e0c7]" : "text-[#9a6a1f]"}`}>Organisation des dossiers</h3>
-                    <p className="text-foreground-muted text-sm">Classement optimisé</p>
-                  </div>
-                </div>
-
-                <div className="relative">
-                  <div className="h-px bg-gradient-to-r from-transparent via-gold to-transparent opacity-70" />
-                  <div className="w-3 h-3 mx-auto -mt-1.5 rounded-full bg-gold shadow-[0_0_20px_rgba(201,168,76,0.7)]" />
-                </div>
-
-                <div>
-                  <h3 className={`font-title text-2xl md:text-3xl uppercase text-center mb-8 ${theme === "dark" ? "text-[#f3dfc0]" : "text-[#8a6120]"}`}>Pourquoi nous faire confiance</h3>
-                  <div className="max-w-lg mx-auto space-y-5">
-                    {["Confidentialité totale", "Respect des délais", "Qualité constante", "Collaboration fluide"].map((item) => (
+                  <div className="mt-10 grid gap-6 md:grid-cols-5">
+                    {[
+                      {
+                        title: "Gain de productivite",
+                        text: "Vous liberez du temps pour le conseil.",
+                        icon: (
+                          <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" strokeWidth={1.7} stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 17.25V9.75m6 7.5V6.75m6 10.5V12m6 5.25V3.75" />
+                          </svg>
+                        ),
+                      },
+                      {
+                        title: "Flexibilite totale",
+                        text: "Adaptez le volume selon vos pics d'activite.",
+                        icon: (
+                          <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" strokeWidth={1.7} stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 7.5h9m0 0-3-3m3 3-3 3M16.5 16.5h-9m0 0 3-3m-3 3 3 3" />
+                          </svg>
+                        ),
+                      },
+                      {
+                        title: "Maitrise des couts",
+                        text: "Pas de recrutement, pas de charges sociales.",
+                        icon: (
+                          <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" strokeWidth={1.7} stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 3.75h9A1.5 1.5 0 0 1 18 5.25v13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 6 18.75V5.25a1.5 1.5 0 0 1 1.5-1.5Z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 7.5h6M9.75 12h.008v.008H9.75V12Zm0 3h.008v.008H9.75V15Zm2.992-3h.008v.008h-.008V12Zm0 3h.008v.008h-.008V15Zm2.992-3h.008v.008h-.008V12Zm0 3h.008v.008h-.008V15Z" />
+                          </svg>
+                        ),
+                      },
+                      {
+                        title: "Reactivite",
+                        text: "Je m'engage a repondre rapidement.",
+                        icon: (
+                          <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" strokeWidth={1.7} stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6l4 2.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                          </svg>
+                        ),
+                      },
+                      {
+                        title: "Confidentialite",
+                        text: "Donnees traitees avec rigueur et discretion.",
+                        icon: (
+                          <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" strokeWidth={1.7} stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
+                          </svg>
+                        ),
+                      },
+                    ].map((item, index) => (
                       <div
-                        key={item}
-                        className={`flex items-center gap-4 text-base md:text-lg ${theme === "dark" ? "text-white" : "text-slate-900"}`}
+                        key={item.title}
+                        className={`px-3 text-center ${index < 4 ? "md:border-r md:border-white/10" : ""}`}
                       >
-                        <span className="w-9 h-9 flex-shrink-0 rounded-full border-2 border-gold grid place-items-center text-gold font-bold shadow-[0_0_0_4px_rgba(201,168,76,0.08)]">✓</span>
-                        <span>{item}</span>
+                        <div className="flex justify-center text-2xl">{item.icon}</div>
+                        <h3 className="mt-4 text-sm font-semibold">{item.title}</h3>
+                        <p className="mt-2 text-xs text-white/75">{item.text}</p>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                <div className="relative">
-                  <div className="h-px bg-gradient-to-r from-transparent via-gold to-transparent opacity-70" />
-                  <div className="w-3 h-3 mx-auto -mt-1.5 rounded-full bg-gold shadow-[0_0_20px_rgba(201,168,76,0.7)]" />
+                <section className="mx-auto max-w-6xl px-2 text-center">
+                  <h2 className={`font-title text-2xl md:text-3xl font-bold ${theme === "dark" ? "text-[#f3dfc0]" : "text-[#1a2a44]"}`}>
+                    Une collaboration simple et efficace
+                  </h2>
+                  <div className="mx-auto mt-3 h-[2px] w-10 rounded-full bg-gold" />
+
+                  <div className="relative mt-14 grid gap-10 md:grid-cols-4 md:gap-6">
+                    <div className={`hidden md:block absolute left-[10%] right-[10%] top-[52px] border-t-2 border-dotted ${theme === "dark" ? "border-white/15" : "border-[#eee]"}`} />
+                    {[
+                      {
+                        number: "1",
+                        title: "Prise de contact",
+                        text: "Vous m'expliquez vos besoins et attentes.",
+                        icon: (
+                          <svg className="h-9 w-9" fill="none" viewBox="0 0 24 24" strokeWidth={1.6} stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
+                          </svg>
+                        ),
+                      },
+                      {
+                        number: "2",
+                        title: "Analyse et adaptation",
+                        text: "Je prends connaissance de votre organisation.",
+                        icon: (
+                          <svg className="h-9 w-9" fill="none" viewBox="0 0 24 24" strokeWidth={1.6} stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-8.25a2.25 2.25 0 0 0-2.25-2.25H6.75A2.25 2.25 0 0 0 4.5 6v12a2.25 2.25 0 0 0 2.25 2.25h5.25" />
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 7.5h7.5M8.25 11.25h4.5M15.75 18.75l1.5 1.5 3-3" />
+                          </svg>
+                        ),
+                      },
+                      {
+                        number: "3",
+                        title: "Demarrage rapide",
+                        text: "Je m'integre a vos process convenus.",
+                        icon: (
+                          <svg className="h-9 w-9" fill="none" viewBox="0 0 24 24" strokeWidth={1.6} stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12a7.5 7.5 0 0 1 15 0m-15 0a7.5 7.5 0 0 0 15 0m-15 0H3m16.5 0H21" />
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 7.5v9m4.5-4.5h-9" />
+                          </svg>
+                        ),
+                      },
+                      {
+                        number: "4",
+                        title: "Suivi et ajustement",
+                        text: "Nous echangeons pour optimiser la collaboration.",
+                        icon: (
+                          <svg className="h-9 w-9" fill="none" viewBox="0 0 24 24" strokeWidth={1.6} stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75" />
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                          </svg>
+                        ),
+                      },
+                    ].map((item) => (
+                      <div key={item.number} className="relative z-10 pt-7 text-center">
+                        <div className="absolute left-1/2 -top-3 flex h-6 w-6 -translate-x-1/2 items-center justify-center rounded-full border-2 border-white/70 bg-[#1a2a44] text-[11px] font-semibold text-white shadow-[0_4px_12px_rgba(15,23,42,0.18)] dark:border-[#0f172f]">
+                          {item.number}
+                        </div>
+                        <div className={`mx-auto mb-5 flex h-[72px] w-[72px] items-center justify-center rounded-full border shadow-[0_8px_18px_rgba(0,0,0,0.08)] ${theme === "dark" ? "border-white/10 bg-[#0f172f]" : "border-[#ffece6] bg-white"}`}>
+                          <span className={`${theme === "dark" ? "text-gold drop-shadow-[0_0_10px_rgba(201,168,76,0.28)]" : "text-[#c9a84c]"}`}>{item.icon}</span>
+                        </div>
+                        <h4 className={`text-base font-semibold ${theme === "dark" ? "text-foreground" : "text-[#1a2a44]"}`}>{item.title}</h4>
+                        <p className={`mt-2 text-sm ${theme === "dark" ? "text-foreground-muted" : "text-[#666]"}`}>{item.text}</p>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+
+                <div className={`mx-auto flex max-w-5xl flex-col overflow-hidden rounded-[15px] border md:flex-row ${theme === "dark" ? "border-gold/15 bg-white/[0.03] shadow-[0_12px_36px_rgba(0,0,0,0.28)]" : "border-[#e6dcc3] bg-background-tertiary shadow-[0_8px_24px_rgba(15,23,42,0.08)]"}`}>
+                  <div className="flex-1 px-8 py-10 text-left">
+                    <h2 className={`font-title text-2xl md:text-3xl font-bold ${theme === "dark" ? "text-gold" : "text-[#1a2a44]"}`}>Besoin d'un renfort fiable pour votre cabinet ?</h2>
+                    <p className={`mt-3 text-base font-medium ${theme === "dark" ? "text-foreground" : "text-[#8a6120]"}`}>Discutons de vos besoins.</p>
+                    <p className={`mt-3 text-sm leading-relaxed ${theme === "dark" ? "text-foreground-secondary" : "text-foreground-secondary"}`}>Je vous propose une solution sur mesure, simple, flexible et efficace.</p>
+                    <button
+                      onClick={() => setShowPartnershipModal(true)}
+                      className={`mt-7 inline-flex items-center gap-3 rounded-full border px-6 py-3.5 text-sm font-bold transition-all duration-200 ${theme === "dark" ? "border-gold/30 bg-gold text-[#0b132b] shadow-[0_14px_30px_rgba(201,168,76,0.22)] hover:bg-gold-light hover:shadow-[0_18px_36px_rgba(201,168,76,0.28)]" : "border-[#d5b86d] bg-gold text-[#0b132b] shadow-[0_12px_24px_rgba(201,168,76,0.18)] hover:bg-[#d7b764] hover:shadow-[0_16px_30px_rgba(201,168,76,0.24)]"}`}
+                    >
+                      <span className={`grid h-8 w-8 place-items-center rounded-full ${theme === "dark" ? "bg-[#0b132b]/10" : "bg-[#0b132b]/8"}`}>
+                        <svg className="h-4.5 w-4.5" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3.75 8.25h16.5M4.5 5.25h15A.75.75 0 0 1 20.25 6v12.75a.75.75 0 0 1-.75.75h-15a.75.75 0 0 1-.75-.75V6a.75.75 0 0 1 .75-.75Z" />
+                        </svg>
+                      </span>
+                      <span>Echanger sur vos besoins</span>
+                      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                      </svg>
+                    </button>
+                    <p className={`mt-5 inline-flex w-fit items-center gap-2 rounded-full border px-3 py-1.5 text-sm ${theme === "dark" ? "border-white/10 bg-white/[0.04] text-foreground-secondary" : "border-[#d9e1ec] bg-white text-foreground-secondary"}`}>
+                      <span className={`grid h-6 w-6 place-items-center rounded-full ${theme === "dark" ? "bg-gold/12 text-gold" : "bg-gold/15 text-[#8a6120]"}`}>
+                        <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6l4 2.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                        </svg>
+                      </span>
+                      <span className="font-medium">Reponse sous 24h garantie</span>
+                    </p>
+                  </div>
+
+                  <div className="relative min-h-[300px] flex-1">
+                    <Image
+                      src={cabinetCtaImage}
+                      alt="Renfort pour cabinet comptable"
+                      fill
+                      className="object-cover"
+                      sizes="(min-width: 768px) 50vw, 100vw"
+                    />
+                  </div>
                 </div>
 
-                <div className="text-center">
-                  <h3 className={`font-title text-2xl md:text-3xl uppercase mb-6 ${theme === "dark" ? "text-[#f3dfc0]" : "text-[#8a6120]"}`}>Une approche haut de gamme</h3>
-                  <p className="text-foreground-secondary text-base md:text-lg leading-relaxed max-w-3xl mx-auto">
-                    World Gestion accompagne les cabinets comptables dans l&apos;externalisation
-                    de leurs tâches administratives et pré-comptables avec rigueur, discrétion
-                    et exigence. Chaque mission est pensée pour vous apporter un cadre de travail
-                    plus fluide, plus fiable et plus rentable.
-                  </p>
-                </div>
               </div>
             )}
           </div>
