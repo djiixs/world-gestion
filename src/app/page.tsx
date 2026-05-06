@@ -68,6 +68,26 @@ export default function Home() {
     root.classList.toggle("theme-light", theme === "light");
   }, [theme]);
 
+  useEffect(() => {
+    const els = document.querySelectorAll<HTMLElement>(".reveal-left, .reveal-right, .reveal-up");
+    if (!els.length) return;
+    // Reset visibility so elements outside viewport animate again after tab switch
+    els.forEach((el) => el.classList.remove("is-visible"));
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12 }
+    );
+    els.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, [isEntrepreneur]);
+
   const handleOfferSelect = (offer: Offer) => {
     setSelectedOffer(offer);
   };
@@ -133,7 +153,7 @@ export default function Home() {
             <div className="min-w-0">
               <span className={`font-bold text-lg sm:text-2xl md:text-3xl tracking-wide block ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`}>World Gestion</span>
               <span className={`block max-w-[220px] sm:max-w-none text-[11px] sm:text-xs md:text-sm leading-snug text-left ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`}>
-                Nous prenons en charge le traitement administratif
+                Je prends en charge le traitement administratif
                 <span className="sm:hidden"> et votre pré-comptabilité avec expertise et rigueur</span>
                 <span className="hidden sm:inline">
                   <br />et votre pré-comptabilité avec expertise et rigueur
@@ -151,19 +171,6 @@ export default function Home() {
           {/* Subtitle */}
 
 
-          {/* CTA */}
-          <div className="mt-5">
-            <a
-              href="#nos-offres"
-              onClick={(e) => {
-                e.preventDefault();
-                scrollTo(document.getElementById("nos-offres"));
-              }}
-              className="btn-gold inline-block text-sm text-white md:text-base"
-            >
-              Découvrir nos offres →
-            </a>
-          </div>
         </div>
       </section>
 
@@ -171,7 +178,7 @@ export default function Home() {
       <section id="offres" className="flex-1 px-6 py-10 md:py-12 bg-background">
         <div className="mx-auto max-w-7xl">
           <div className="mx-auto mt-8 max-w-7xl space-y-10">
-            <div className={`rounded-[12px] border px-6 py-8 md:px-10 md:py-10 ${theme === "dark" ? "border-[rgba(201,168,76,0.08)] bg-[#0e1731]" : "border-[rgba(26,42,68,0.06)] bg-white shadow-[0_18px_60px_rgba(15,23,42,0.08)]"}`}>
+            <div className={`reveal-up rounded-[12px] border px-6 py-8 md:px-10 md:py-10 ${theme === "dark" ? "border-[rgba(201,168,76,0.08)] bg-[#0e1731]" : "border-[rgba(26,42,68,0.06)] bg-white shadow-[0_18px_60px_rgba(15,23,42,0.08)]"}`}>
               <h2 className={`font-title text-2xl md:text-3xl font-bold text-center ${theme === "dark" ? "text-gold" : "text-[#1a2a44]"}`}>
                 Vous êtes :
               </h2>
@@ -248,7 +255,7 @@ export default function Home() {
 
             {isEntrepreneur ? (
               <>
-                <div>
+                <div className="reveal-left">
                   <h2 className={`font-title text-2xl md:text-3xl font-bold text-center ${theme === "dark" ? "text-gold" : "text-[#1a2a44]"}`}>
                     Ce que je vous apporte
                   </h2>
@@ -293,7 +300,7 @@ export default function Home() {
                   </div>
                 </div>
 
-                <div className={`rounded-[24px] px-6 py-10 md:px-8 ${theme === "dark" ? "bg-white/[0.03]" : "bg-[#fdf8f6]"}`}>
+                <div className={`reveal-right rounded-[24px] px-6 py-10 md:px-8 ${theme === "dark" ? "bg-white/[0.03]" : "bg-[#fdf8f6]"}`}>
                   <h2 className={`font-title text-2xl md:text-3xl font-bold text-center ${theme === "dark" ? "text-gold" : "text-[#1a2a44]"}`}>
                     Mes services
                   </h2>
@@ -303,7 +310,7 @@ export default function Home() {
                     {[
                       {
                         title: "Support administratif",
-                        description: "Gestion de vos taches administratives courantes : courriers, classement, relances...",
+                        description: "Je gere vos taches administratives courantes : courriers, classement, relances...",
                         icon: (
                           <>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
@@ -312,7 +319,7 @@ export default function Home() {
                       },
                       {
                         title: "Pre-comptabilite",
-                        description: "Saisie, suivi et organisation de vos documents comptables pour une comptabilite a jour.",
+                        description: "Je saisis et organise vos documents comptables pour une comptabilite toujours a jour.",
                         icon: <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 15.75V18m-7.5-6.75h.008v.008H8.25v-.008Zm0 2.25h.008v.008H8.25V13.5Zm0 2.25h.008v.008H8.25v-.008Zm0 2.25h.008v.008H8.25V18Zm2.498-6.75h.007v.008h-.007v-.008Zm0 2.25h.007v.008h-.007V13.5Zm0 2.25h.007v.008h-.007v-.008Zm0 2.25h.007v.008h-.007V18Zm2.504-6.75h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V13.5Zm0 2.25h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V18Zm2.498-6.75h.008v.008h-.008v-.008ZM15.75 13.5h.008v.008h-.008V13.5ZM6 6.75A.75.75 0 0 1 6.75 6h10.5a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-.75.75H6.75A.75.75 0 0 1 6 8.25v-1.5Z" />,
                       },
                       {
@@ -320,8 +327,7 @@ export default function Home() {
                         description: "Chaque entreprise est differente. J'adapte mes services a vos besoins et a votre organisation.",
                         icon: (
                           <>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12a7.5 7.5 0 0 1 15 0m-15 0a7.5 7.5 0 0 0 15 0m-15 0H3m16.5 0H21" />
-                            <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
                           </>
                         ),
                       },
@@ -348,17 +354,16 @@ export default function Home() {
               </>
             ) : (
               <div className="space-y-14">
-                <div className={`rounded-[18px] border px-6 py-10 md:px-10 md:py-12 ${theme === "dark" ? "border-white/8 bg-[#142038] text-white" : "border-[rgba(26,42,68,0.08)] bg-[#5f7290] text-white"}`}>
-                  <h2 className="font-title text-center text-2xl md:text-3xl font-bold">Les avantages pour votre cabinet</h2>
-                  <div className="mx-auto mt-3 h-[2px] w-10 rounded-full bg-gold" />
+                <div className={`reveal-left rounded-[18px] border px-6 py-10 md:px-10 md:py-12 ${theme === "dark" ? "border-white/8 bg-[#142038] text-white" : "border-[rgba(26,42,68,0.08)] bg-[#5f7290] text-white"}`}>
+                  <h2 className="font-title text-center text-2xl md:text-3xl font-bold text-gold">Les avantages pour votre cabinet</h2>
 
-                  <div className="mt-10 grid gap-6 md:grid-cols-5">
+                  <div className="mt-12 grid gap-0 md:grid-cols-5 md:divide-x md:divide-white/10">
                     {[
                       {
                         title: "Gain de productivite",
                         text: "Vous liberez du temps pour le conseil.",
                         icon: (
-                          <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" strokeWidth={1.7} stroke="currentColor">
+                          <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M3 17.25V9.75m6 7.5V6.75m6 10.5V12m6 5.25V3.75" />
                           </svg>
                         ),
@@ -367,7 +372,7 @@ export default function Home() {
                         title: "Flexibilite totale",
                         text: "Adaptez le volume selon vos pics d'activite.",
                         icon: (
-                          <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" strokeWidth={1.7} stroke="currentColor">
+                          <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 7.5h9m0 0-3-3m3 3-3 3M16.5 16.5h-9m0 0 3-3m-3 3 3 3" />
                           </svg>
                         ),
@@ -376,7 +381,7 @@ export default function Home() {
                         title: "Maitrise des couts",
                         text: "Pas de recrutement, pas de charges sociales.",
                         icon: (
-                          <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" strokeWidth={1.7} stroke="currentColor">
+                          <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 3.75h9A1.5 1.5 0 0 1 18 5.25v13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 6 18.75V5.25a1.5 1.5 0 0 1 1.5-1.5Z" />
                             <path strokeLinecap="round" strokeLinejoin="round" d="M9 7.5h6M9.75 12h.008v.008H9.75V12Zm0 3h.008v.008H9.75V15Zm2.992-3h.008v.008h-.008V12Zm0 3h.008v.008h-.008V15Zm2.992-3h.008v.008h-.008V12Zm0 3h.008v.008h-.008V15Z" />
                           </svg>
@@ -386,7 +391,7 @@ export default function Home() {
                         title: "Reactivite",
                         text: "Je m'engage a repondre rapidement.",
                         icon: (
-                          <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" strokeWidth={1.7} stroke="currentColor">
+                          <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6l4 2.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                           </svg>
                         ),
@@ -395,32 +400,33 @@ export default function Home() {
                         title: "Confidentialite",
                         text: "Donnees traitees avec rigueur et discretion.",
                         icon: (
-                          <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" strokeWidth={1.7} stroke="currentColor">
+                          <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
                           </svg>
                         ),
                       },
-                    ].map((item, index) => (
-                      <div
-                        key={item.title}
-                        className={`px-3 text-center ${index < 4 ? "md:border-r md:border-white/10" : ""}`}
-                      >
-                        <div className="flex justify-center text-2xl">{item.icon}</div>
-                        <h3 className="mt-4 text-sm font-semibold">{item.title}</h3>
-                        <p className="mt-2 text-xs text-white/75">{item.text}</p>
+                    ].map((item) => (
+                      <div key={item.title} className="group flex flex-col items-center px-5 py-6 text-center">
+                        {/* Gold top accent line */}
+                        <div className="mb-5 h-[2px] w-8 rounded-full bg-gold/60 transition-all duration-300 group-hover:w-14 group-hover:bg-gold" />
+                        {/* Icon — no background, just the SVG in gold */}
+                        <div className="text-gold transition-transform duration-300 group-hover:-translate-y-1">
+                          {item.icon}
+                        </div>
+                        <h3 className="mt-4 text-sm font-bold tracking-wide text-white">{item.title}</h3>
+                        <p className="mt-2 text-xs leading-relaxed text-white/55">{item.text}</p>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                <section className="mx-auto max-w-6xl px-2 text-center">
+                <section className="reveal-right mx-auto max-w-6xl px-2 text-center">
                   <h2 className={`font-title text-2xl md:text-3xl font-bold ${theme === "dark" ? "text-[#f3dfc0]" : "text-[#1a2a44]"}`}>
                     Une collaboration simple et efficace
                   </h2>
-                  <div className="mx-auto mt-3 h-[2px] w-10 rounded-full bg-gold" />
 
                   <div className="relative mt-14 grid gap-10 md:grid-cols-4 md:gap-6">
-                    <div className={`hidden md:block absolute left-[10%] right-[10%] top-[52px] border-t-2 border-dotted ${theme === "dark" ? "border-white/15" : "border-[#eee]"}`} />
+                    <div className={`hidden md:block absolute left-[10%] right-[10%] top-[64px] border-t-2 border-dotted ${theme === "dark" ? "border-white/15" : "border-[#eee]"}`} />
                     {[
                       {
                         number: "1",
@@ -457,7 +463,7 @@ export default function Home() {
                       {
                         number: "4",
                         title: "Suivi et ajustement",
-                        text: "Nous echangeons pour optimiser la collaboration.",
+                        text: "J'assure un suivi regulier pour optimiser notre collaboration.",
                         icon: (
                           <svg className="h-9 w-9" fill="none" viewBox="0 0 24 24" strokeWidth={1.6} stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75" />
@@ -466,12 +472,14 @@ export default function Home() {
                         ),
                       },
                     ].map((item) => (
-                      <div key={item.number} className="relative z-10 pt-7 text-center">
-                        <div className="absolute left-1/2 -top-3 flex h-6 w-6 -translate-x-1/2 items-center justify-center rounded-full border-2 border-white/70 bg-[#1a2a44] text-[11px] font-semibold text-white shadow-[0_4px_12px_rgba(15,23,42,0.18)] dark:border-[#0f172f]">
-                          {item.number}
-                        </div>
-                        <div className={`mx-auto mb-5 flex h-[72px] w-[72px] items-center justify-center rounded-full border shadow-[0_8px_18px_rgba(0,0,0,0.08)] ${theme === "dark" ? "border-white/10 bg-[#0f172f]" : "border-[#ffece6] bg-white"}`}>
-                          <span className={`${theme === "dark" ? "text-gold drop-shadow-[0_0_10px_rgba(201,168,76,0.28)]" : "text-[#c9a84c]"}`}>{item.icon}</span>
+                      <div key={item.number} className="relative z-10 text-center">
+                        <div className="flex flex-col items-center">
+                          <div className="flex h-6 w-6 items-center justify-center rounded-full border-2 border-white/70 bg-[#1a2a44] text-[11px] font-semibold text-white shadow-[0_4px_12px_rgba(15,23,42,0.18)] dark:border-[#0f172f]">
+                            {item.number}
+                          </div>
+                          <div className={`mt-2 mb-5 flex h-[72px] w-[72px] items-center justify-center rounded-full border shadow-[0_8px_18px_rgba(0,0,0,0.08)] ${theme === "dark" ? "border-white/10 bg-[#0f172f]" : "border-[#ffece6] bg-white"}`}>
+                            <span className={`${theme === "dark" ? "text-gold drop-shadow-[0_0_10px_rgba(201,168,76,0.28)]" : "text-[#c9a84c]"}`}>{item.icon}</span>
+                          </div>
                         </div>
                         <h4 className={`text-base font-semibold ${theme === "dark" ? "text-foreground" : "text-[#1a2a44]"}`}>{item.title}</h4>
                         <p className={`mt-2 text-sm ${theme === "dark" ? "text-foreground-muted" : "text-[#666]"}`}>{item.text}</p>
@@ -480,22 +488,22 @@ export default function Home() {
                   </div>
                 </section>
 
-                <div className={`mx-auto flex max-w-5xl flex-col overflow-hidden rounded-[15px] border md:flex-row ${theme === "dark" ? "border-gold/15 bg-white/[0.03] shadow-[0_12px_36px_rgba(0,0,0,0.28)]" : "border-[#e6dcc3] bg-background-tertiary shadow-[0_8px_24px_rgba(15,23,42,0.08)]"}`}>
+                <div className={`reveal-left mx-auto flex max-w-5xl flex-col overflow-hidden rounded-[15px] border md:flex-row ${theme === "dark" ? "border-gold/15 bg-white/[0.03] shadow-[0_12px_36px_rgba(0,0,0,0.28)]" : "border-[#e6dcc3] bg-background-tertiary shadow-[0_8px_24px_rgba(15,23,42,0.08)]"}`}>
                   <div className="flex-1 px-8 py-10 text-left">
                     <h2 className={`font-title text-2xl md:text-3xl font-bold ${theme === "dark" ? "text-gold" : "text-[#1a2a44]"}`}>Besoin d'un renfort fiable pour votre cabinet ?</h2>
                     <p className={`mt-3 text-base font-medium ${theme === "dark" ? "text-foreground" : "text-[#8a6120]"}`}>Discutons de vos besoins.</p>
                     <p className={`mt-3 text-sm leading-relaxed ${theme === "dark" ? "text-foreground-secondary" : "text-foreground-secondary"}`}>Je vous propose une solution sur mesure, simple, flexible et efficace.</p>
                     <button
                       onClick={() => setShowPartnershipModal(true)}
-                      className={`mt-7 inline-flex items-center gap-3 rounded-full border px-6 py-3.5 text-sm font-bold transition-all duration-200 ${theme === "dark" ? "border-gold/30 bg-gold text-[#0b132b] shadow-[0_14px_30px_rgba(201,168,76,0.22)] hover:bg-gold-light hover:shadow-[0_18px_36px_rgba(201,168,76,0.28)]" : "border-[#d5b86d] bg-gold text-[#0b132b] shadow-[0_12px_24px_rgba(201,168,76,0.18)] hover:bg-[#d7b764] hover:shadow-[0_16px_30px_rgba(201,168,76,0.24)]"}`}
+                      className={`mt-7 inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-bold transition-all duration-200 ${theme === "dark" ? "border-gold/30 bg-gold text-[#0b132b] shadow-[0_6px_14px_rgba(201,168,76,0.10)] hover:bg-gold-light hover:shadow-[0_8px_18px_rgba(201,168,76,0.14)]" : "border-[#d5b86d] bg-gold text-[#0b132b] shadow-[0_4px_12px_rgba(201,168,76,0.09)] hover:bg-[#d7b764] hover:shadow-[0_6px_14px_rgba(201,168,76,0.12)]"}`}
                     >
-                      <span className={`grid h-8 w-8 place-items-center rounded-full ${theme === "dark" ? "bg-[#0b132b]/10" : "bg-[#0b132b]/8"}`}>
-                        <svg className="h-4.5 w-4.5" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor">
+                      <span className={`grid h-6 w-6 place-items-center rounded-full ${theme === "dark" ? "bg-[#0b132b]/10" : "bg-[#0b132b]/8"}`}>
+                        <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3.75 8.25h16.5M4.5 5.25h15A.75.75 0 0 1 20.25 6v12.75a.75.75 0 0 1-.75.75h-15a.75.75 0 0 1-.75-.75V6a.75.75 0 0 1 .75-.75Z" />
                         </svg>
                       </span>
                       <span>Echanger sur vos besoins</span>
-                      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                      <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
                       </svg>
                     </button>
@@ -525,10 +533,10 @@ export default function Home() {
           </div>
 
           {/* ─── Offres ─── */}
-          <div id="nos-offres" className="mt-10">
+          <div id="nos-offres" className="reveal-up mt-10">
             {isEntrepreneur ? (
               <>
-                <h2 className={`font-title text-2xl md:text-3xl font-bold text-center mb-2 ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`}>Nos Offres</h2>
+                <h2 className={`font-title text-2xl md:text-3xl font-bold text-center mb-2 ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`}>Mes Offres</h2>
                 <p className="text-foreground-secondary text-center mb-6 max-w-lg mx-auto">
                   Choisissez la formule qui correspond à votre profil et vos besoins.
                 </p>
