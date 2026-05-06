@@ -14,7 +14,7 @@ interface PaymentFormProps {
   onBack: () => void;
 }
 
-function CheckoutForm({ clientSecret, offerTitle, priceLabel, priceUnit, onSuccess, onBack }: PaymentFormProps) {
+function CheckoutForm({ clientSecret, offerTitle: _offerTitle, priceLabel, priceUnit, onSuccess, onBack }: PaymentFormProps) {
   const stripe = useStripe();
   const elements = useElements();
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");

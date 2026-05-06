@@ -1,77 +1,28 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect } from "react";
+import Image from "next/image";
 import OfferToggle from "@/components/OfferToggle";
 import EntrepreneurOffers from "@/components/EntrepreneurOffers";
-import CabinetOffers from "@/components/CabinetOffers";
 import SubscriptionForm from "@/components/SubscriptionForm";
 import CabinetLeadForm from "@/components/CabinetLeadForm";
+import BookingModal from "@/components/BookingModal";
 
 import { entrepreneurOffers } from "@/data/entrepreneurOffers";
-import { cabinetOffers } from "@/data/cabinetOffers";
 import { Offer } from "@/types/offers";
-
-function smoothScrollTo(target: HTMLElement, duration = 600) {
-  const start = window.scrollY;
-  const end = target.getBoundingClientRect().top + window.scrollY;
-  const distance = end - start;
-  let startTime: number | null = null;
-
-  function easeInOutCubic(t: number) {
-    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-  }
-
-  function step(currentTime: number) {
-    if (!startTime) startTime = currentTime;
-    const elapsed = currentTime - startTime;
-    const progress = Math.min(elapsed / duration, 1);
-    window.scrollTo(0, start + distance * easeInOutCubic(progress));
-    if (progress < 1) requestAnimationFrame(step);
-  }
-
-  requestAnimationFrame(step);
-}
-
-type HomepageLeadRecord = {
-  id: string;
-  createdAt: string;
-  type: "entrepreneur" | "cabinet";
-  offerId: string;
-  offerTitle: string;
-  email: string;
-  phone: string;
-  firstName?: string;
-  lastName?: string;
-  cabinetName?: string;
-  responsableName?: string;
-  note?: string;
-};
-
-type HomepageAdminDashboard = {
-  leads: HomepageLeadRecord[];
-  stats: {
-    totalLeads: number;
-  };
-};
 
 export default function Home() {
   const [isEntrepreneur, setIsEntrepreneur] = useState(true);
   const [selectedOffer, setSelectedOffer] = useState<Offer | null>(null);
   const [showPartnershipModal, setShowPartnershipModal] = useState(false);
   const [theme, setTheme] = useState<"dark" | "light">("dark");
-
-  const scrollTo = useCallback((el: HTMLElement | null) => {
-    if (el) smoothScrollTo(el);
-  }, []);
+  const [showOffersModal, setShowOffersModal] = useState(false);
+  const [bookingOffer, setBookingOffer] = useState<Offer | null>(null);
 
   useEffect(() => {
     const root = document.documentElement;
     root.classList.toggle("theme-light", theme === "light");
   }, [theme]);
-
-  const handleOfferSelect = (offer: Offer) => {
-    setSelectedOffer(offer);
-  };
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -110,7 +61,7 @@ export default function Home() {
 
       {/* ─── HERO SECTION ─── */}
       <section
-        className="relative px-6 py-10 md:py-14 overflow-hidden"
+        className="relative min-h-[75vh] flex flex-col justify-center px-6 py-10 md:py-14 overflow-hidden"
         style={{
           background:
             theme === "dark"
@@ -126,15 +77,17 @@ export default function Home() {
         <div className="relative z-10 max-w-3xl mx-auto md:mx-0 md:ml-[10%]">
           {/* Logo */}
           <div className="flex flex-row items-center gap-3 sm:gap-4 mb-5">
-            <img
+            <Image
               src="/logo.png"
               alt="World Gestion"
-                className="h-30 sm:h-30 md:h-35 w-auto flex-shrink-0"
+              width={140}
+              height={140}
+              className="h-30 sm:h-30 md:h-35 w-auto flex-shrink-0"
             />
             <div className="min-w-0">
               <span className={`font-bold text-lg sm:text-2xl md:text-3xl tracking-wide block ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`}>World Gestion</span>
               <span className={`block max-w-[220px] sm:max-w-none text-[11px] sm:text-xs md:text-sm leading-snug text-left ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`}>
-                Nous prenons en charge le traitement administratif
+                Je prends en charge votre traitement administratif
                 <span className="sm:hidden"> et votre pré-comptabilité avec expertise et rigueur</span>
                 <span className="hidden sm:inline">
                   <br />et votre pré-comptabilité avec expertise et rigueur
@@ -146,32 +99,20 @@ export default function Home() {
           {/* Title */}
           <h1 className={`font-title text-xl sm:text-4xl md:text-5xl font-bold leading-tight ${theme === "dark" ? "text-white" : "text-black"}`}>
             Simplifiez et optimisez votre<br />
-            <span className={theme === "dark" ? "text-white" : "text-black"}>gestion d&apos;entreprise.</span>
+            <span className={theme === "dark" ? "text-white" : "text-black"}>gestion d&apos;entreprise,</span><br />
+            <span className="text-gold">en toute sérénité.</span>
           </h1>
 
           {/* Subtitle */}
 
 
           {/* CTA */}
-          <div className="mt-5">
-            <a
-              href="#nos-offres"
-              onClick={(e) => {
-                e.preventDefault();
-                scrollTo(document.getElementById("nos-offres"));
-              }}
-              className="btn-gold inline-block text-sm text-white md:text-base"
-            >
-              Découvrir nos offres →
-            </a>
-          </div>
         </div>
       </section>
 
       {/* ─── TOGGLE + SERVICES + OFFRES ─── */}
-      <section id="offres" className="flex-1 px-6 py-10 md:py-12 bg-background">
+      <section id="offres" className="px-6 py-10 md:py-12 bg-background">
         <div className="mx-auto max-w-6xl">
-          {/* Toggle en haut */}
           <OfferToggle
             isEntrepreneur={isEntrepreneur}
             onChange={(v) => {
@@ -180,135 +121,97 @@ export default function Home() {
             }}
           />
 
-          {/* ─── Services ─── */}
+          {/* ─── Services / Cabinet intro ─── */}
+          <div key={isEntrepreneur ? "entrepreneur" : "cabinet"} className="animate-fade-in-up">
           <div className="mt-8 max-w-5xl mx-auto">
-            {isEntrepreneur && (
-              <>
-                <h2 className={`font-title text-2xl md:text-3xl font-bold mb-2 ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`}>Nos Services</h2>
-                <p className="text-foreground-secondary mb-6 max-w-xl">
-                  Des solutions adaptées à vos besoins, avec un accompagnement personnalisé et une qualité de service irréprochable.
-                </p>
-              </>
-            )}
-
-            {isEntrepreneur ? (
-              /* Services Entrepreneurs */
-              <div className="grid gap-5 grid-cols-1 md:grid-cols-3">
-                <div className="card-hover rounded-[10px] border border-border-gold bg-background-tertiary p-6 text-center">
-                  <div className={`text-3xl mb-3 ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`}>
-                    <svg className="h-10 w-10 mx-auto" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
-                    </svg>
-                  </div>
-                  <h3 className={`font-semibold text-lg mb-1 ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`}>Support administratif</h3>
-                  <p className="text-foreground-muted text-sm">Gestion de vos documents, courriers et formalités administratives au quotidien.</p>
-                </div>
-                <div className="card-hover rounded-[10px] border border-border-gold bg-background-tertiary p-6 text-center">
-                  <div className={`text-3xl mb-3 ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`}>
-                    <svg className="h-10 w-10 mx-auto" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 15.75V18m-7.5-6.75h.008v.008H8.25v-.008Zm0 2.25h.008v.008H8.25V13.5Zm0 2.25h.008v.008H8.25v-.008Zm0 2.25h.008v.008H8.25V18Zm2.498-6.75h.007v.008h-.007v-.008Zm0 2.25h.007v.008h-.007V13.5Zm0 2.25h.007v.008h-.007v-.008Zm0 2.25h.007v.008h-.007V18Zm2.504-6.75h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V13.5Zm0 2.25h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V18Zm2.498-6.75h.008v.008h-.008v-.008ZM15.75 13.5h.008v.008h-.008V13.5ZM6 6.75A.75.75 0 0 1 6.75 6h10.5a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-.75.75H6.75A.75.75 0 0 1 6 8.25v-1.5Z" />
-                    </svg>
-                  </div>
-                  <h3 className={`font-semibold text-lg mb-1 ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`}>Pré-comptabilité</h3>
-                  <p className="text-foreground-muted text-sm">Saisie comptable, rapprochements bancaires et préparation de vos bilans.</p>
-                </div>
-                <div className="card-hover rounded-[10px] border border-border-gold bg-background-tertiary p-6 text-center">
-                  <div className={`text-3xl mb-3 ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`}>
-                    <svg className="h-10 w-10 mx-auto" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 7.125 16.875 4.5" />
-                    </svg>
-                  </div>
-                  <h3 className={`font-semibold text-lg mb-1 ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`}>Services personnalisables</h3>
-                  <p className="text-foreground-muted text-sm">Des prestations sur mesure adaptées aux besoins spécifiques de votre activité.</p>
-                </div>
-              </div>
-            ) : (
+            {!isEntrepreneur && (
               /* ═══ Contenu Cabinets Comptables ═══ */
-              <div className="space-y-12">
-
-                {/* Hero Cabinet */}
-                <div className="text-center md:text-left">
-                  <h2 className={`font-title text-3xl md:text-4xl font-bold uppercase leading-tight mb-4 ${theme === "dark" ? "text-[#f6e8d5]" : "text-[#8a6120]"}`}>
-                    Externalisation comptable<br />pour cabinets
+              <div className="py-10 md:py-16 max-w-5xl mx-auto space-y-8">
+                {/* Bloc en-tête pleine largeur */}
+                <div className="space-y-6 text-center">
+                  <h2 className={`font-title text-3xl md:text-5xl font-bold leading-tight ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`}>
+                    Pour les cabinets comptables
                   </h2>
-                  <p className="text-foreground-secondary text-base md:text-lg max-w-xl">
-                    Optimisez votre productivité avec un partenaire fiable et structuré
+                  <p className={`text-sm md:text-base leading-relaxed ${theme === "dark" ? "text-foreground-secondary" : "text-[#4a3010]"}`}>
+                    Un support externalisé fiable, flexible et confidentiel, pour absorber votre charge et vous faire gagner du temps.
                   </p>
-                </div>
-
-                {/* Ligne séparatrice dorée */}
-                <div className="relative">
-                  <div className="h-px bg-gradient-to-r from-transparent via-gold to-transparent opacity-70" />
-                  <div className="w-3 h-3 mx-auto -mt-1.5 rounded-full bg-gold shadow-[0_0_20px_rgba(201,168,76,0.7)]" />
-                </div>
-
-                {/* 5 Services Cards */}
-                <div className="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-3 -mx-6 px-6 md:mx-0 md:px-0 md:grid md:grid-cols-5 md:overflow-visible md:pb-0 md:snap-none">
-                  <div className="card-hover rounded-2xl border border-white/[0.12] p-5 text-center min-w-[40vw] md:min-w-0 snap-center min-h-[180px]" style={{ background: "linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03))" }}>
-                    <div className="w-16 h-16 mx-auto mb-4 rounded-2xl border border-gold/20 bg-gold/[0.06] grid place-items-center text-gold"><svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" /></svg></div>
-                    <h3 className={`font-title text-lg mb-1 ${theme === "dark" ? "text-[#f3e0c7]" : "text-[#9a6a1f]"}`}>Saisie comptable</h3>
-                    <p className="text-foreground-muted text-sm">Traitement structuré et précis</p>
-                  </div>
-                  <div className="card-hover rounded-2xl border border-white/[0.12] p-5 text-center min-w-[40vw] md:min-w-0 snap-center min-h-[180px]" style={{ background: "linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03))" }}>
-                    <div className="w-16 h-16 mx-auto mb-4 rounded-2xl border border-gold/20 bg-gold/[0.06] grid place-items-center text-gold"><svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182" /></svg></div>
-                    <h3 className={`font-title text-lg mb-1 ${theme === "dark" ? "text-[#f3e0c7]" : "text-[#9a6a1f]"}`}>Lettrage</h3>
-                    <p className="text-foreground-muted text-sm">Suivi clients / fournisseurs</p>
-                  </div>
-                  <div className="card-hover rounded-2xl border border-white/[0.12] p-5 text-center min-w-[40vw] md:min-w-0 snap-center min-h-[180px]" style={{ background: "linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03))" }}>
-                    <div className="w-16 h-16 mx-auto mb-4 rounded-2xl border border-gold/20 bg-gold/[0.06] grid place-items-center text-gold"><svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0 0 12 9.75c-2.551 0-5.056.2-7.5.582V21" /></svg></div>
-                    <h3 className={`font-title text-lg mb-1 ${theme === "dark" ? "text-[#f3e0c7]" : "text-[#9a6a1f]"}`}>Rapprochements bancaires</h3>
-                    <p className="text-foreground-muted text-sm">Fiabilité et contrôle</p>
-                  </div>
-                  <div className="card-hover rounded-2xl border border-white/[0.12] p-5 text-center min-w-[40vw] md:min-w-0 snap-center min-h-[180px]" style={{ background: "linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03))" }}>
-                    <div className="w-16 h-16 mx-auto mb-4 rounded-2xl border border-gold/20 bg-gold/[0.06] grid place-items-center text-gold"><svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" /></svg></div>
-                    <h3 className={`font-title text-lg mb-1 ${theme === "dark" ? "text-[#f3e0c7]" : "text-[#9a6a1f]"}`}>Préparation TVA</h3>
-                    <p className="text-foreground-muted text-sm">Éléments prêts à déclarer</p>
-                  </div>
-                  <div className="card-hover rounded-2xl border border-white/[0.12] p-5 text-center min-w-[40vw] md:min-w-0 snap-center min-h-[180px]" style={{ background: "linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03))" }}>
-                    <div className="w-16 h-16 mx-auto mb-4 rounded-2xl border border-gold/20 bg-gold/[0.06] grid place-items-center text-gold"><svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12.75V12A2.25 2.25 0 0 1 4.5 9.75h15A2.25 2.25 0 0 1 21.75 12v.75m-8.69-6.44-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z" /></svg></div>
-                    <h3 className={`font-title text-lg mb-1 ${theme === "dark" ? "text-[#f3e0c7]" : "text-[#9a6a1f]"}`}>Organisation des dossiers</h3>
-                    <p className="text-foreground-muted text-sm">Classement optimisé</p>
-                  </div>
-                </div>
-
-                {/* Ligne séparatrice dorée */}
-                <div className="relative">
-                  <div className="h-px bg-gradient-to-r from-transparent via-gold to-transparent opacity-70" />
-                  <div className="w-3 h-3 mx-auto -mt-1.5 rounded-full bg-gold shadow-[0_0_20px_rgba(201,168,76,0.7)]" />
-                </div>
-
-                {/* Pourquoi nous faire confiance */}
-                <div>
-                  <h3 className={`font-title text-2xl md:text-3xl uppercase text-center mb-8 ${theme === "dark" ? "text-[#f3dfc0]" : "text-[#8a6120]"}`}>Pourquoi nous faire confiance</h3>
-                  <div className="max-w-lg mx-auto space-y-5">
-                    {["Confidentialité totale", "Respect des délais", "Qualité constante", "Collaboration fluide"].map((item) => (
-                      <div
-                        key={item}
-                        className={`flex items-center gap-4 text-base md:text-lg ${theme === "dark" ? "text-white" : "text-slate-900"}`}
-                      >
-                        <span className="w-9 h-9 flex-shrink-0 rounded-full border-2 border-gold grid place-items-center text-gold font-bold shadow-[0_0_0_4px_rgba(201,168,76,0.08)]">✓</span>
-                        <span>{item}</span>
+                  {/* Bénéfices horizontaux */}
+                  <div className="flex flex-wrap justify-center gap-x-20 gap-y-6 pt-2">
+                    {([
+                      {
+                        label: "Flexibilité",
+                        svg: (
+                          <svg className="h-10 w-10 flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M10.343 3.94c.09-.542.56-.94 1.11-.94h1.093c.55 0 1.02.398 1.11.94l.149.894c.07.424.384.764.78.93.398.164.855.142 1.205-.108l.737-.527a1.125 1.125 0 0 1 1.45.12l.773.774c.39.389.44 1.002.12 1.45l-.527.737c-.25.35-.272.806-.107 1.204.165.397.505.71.93.78l.893.15c.543.09.94.559.94 1.109v1.094c0 .55-.397 1.02-.94 1.11l-.894.149c-.424.07-.764.383-.929.78-.165.398-.143.854.107 1.204l.527.738c.32.447.269 1.06-.12 1.45l-.774.773a1.125 1.125 0 0 1-1.449.12l-.738-.527c-.35-.25-.806-.272-1.203-.107-.398.165-.71.505-.781.929l-.149.894c-.09.542-.56.94-1.11.94h-1.094c-.55 0-1.019-.398-1.11-.94l-.148-.894c-.071-.424-.384-.764-.781-.93-.398-.164-.854-.142-1.204.108l-.738.527c-.447.32-1.06.269-1.45-.12l-.773-.774a1.125 1.125 0 0 1-.12-1.45l.527-.737c.25-.35.272-.806.108-1.204-.165-.397-.506-.71-.93-.78l-.894-.15c-.542-.09-.94-.56-.94-1.109v-1.094c0-.55.398-1.02.94-1.11l.894-.149c.424-.07.765-.383.93-.78.165-.398.143-.854-.108-1.204l-.526-.738a1.125 1.125 0 0 1 .12-1.45l.773-.773a1.125 1.125 0 0 1 1.45-.12l.737.527c.35.25.807.272 1.204.107.397-.165.71-.505.78-.929l.15-.894Z" /><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                          </svg>
+                        ),
+                      },
+                      {
+                        label: "Productivité",
+                        svg: (
+                          <svg className="h-10 w-10 flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941" />
+                          </svg>
+                        ),
+                      },
+                      {
+                        label: "Délégation fiable",
+                        svg: (
+                          <svg className="h-10 w-10 flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
+                          </svg>
+                        ),
+                      },
+                    ] as { label: string; svg: React.ReactNode }[]).map(({ svg, label }) => (
+                      <div key={label} className={`flex flex-col items-center gap-2 text-base md:text-lg font-semibold ${theme === "dark" ? "text-foreground-secondary" : "text-[#4a3010]"}`}>
+                        <span className={theme === "dark" ? "text-gold" : "text-[#8a6120]"}>{svg}</span>
+                        {label}
                       </div>
                     ))}
                   </div>
                 </div>
 
-                {/* Ligne séparatrice dorée */}
-                <div className="relative">
-                  <div className="h-px bg-gradient-to-r from-transparent via-gold to-transparent opacity-70" />
-                  <div className="w-3 h-3 mx-auto -mt-1.5 rounded-full bg-gold shadow-[0_0_20px_rgba(201,168,76,0.7)]" />
-                </div>
+                {/* Deux colonnes : missions + image */}
+                <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6">
+                  <div className="flex-1 min-w-0 space-y-6">
+                    <div>
+                      <p className={`text-lg md:text-xl font-bold mb-5 ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`}>
+                        Mes missions
+                      </p>
+                      <ul className="space-y-4">
+                        {[
+                          "Saisie comptable",
+                          "Préparation des dossiers",
+                          "Organisation des pièces",
+                          "Support administratif",
+                        ].map((s) => (
+                          <li key={s} className={`flex items-center gap-3 text-base md:text-lg font-medium ${theme === "dark" ? "text-foreground-secondary" : "text-[#4a3010]"}`}>
+                            <span className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full ${theme === "dark" ? "bg-gold/15" : "bg-[#8a6120]/10"}`}>
+                              <svg className={`h-4 w-4 ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`} fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                              </svg>
+                            </span>
+                            {s}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
 
-                {/* Approche haut de gamme */}
-                <div className="text-center">
-                  <h3 className={`font-title text-2xl md:text-3xl uppercase mb-6 ${theme === "dark" ? "text-[#f3dfc0]" : "text-[#8a6120]"}`}>Une approche haut de gamme</h3>
-                  <p className="text-foreground-secondary text-base md:text-lg leading-relaxed max-w-3xl mx-auto">
-                    World Gestion accompagne les cabinets comptables dans l&apos;externalisation
-                    de leurs tâches administratives et pré-comptables avec rigueur, discrétion
-                    et exigence. Chaque mission est pensée pour vous apporter un cadre de travail
-                    plus fluide, plus fiable et plus rentable.
-                  </p>
+                  </div>
+
+                  {/* Colonne droite — image */}
+                  <div className="w-full md:w-[52%] flex-shrink-0 relative h-64 md:h-96">
+                    <div
+                      className={`absolute inset-0 bg-cover bg-center bg-no-repeat ${theme === "dark" ? "opacity-35" : "opacity-50"}`}
+                      style={{
+                        backgroundImage: "url('/cabinet-photo.jpg')",
+                        maskImage: "linear-gradient(to right, transparent, black 40%, black 60%, transparent), linear-gradient(to bottom, transparent, black 25%, black 75%, transparent)",
+                        WebkitMaskImage: "linear-gradient(to right, transparent, black 40%, black 60%, transparent), linear-gradient(to bottom, transparent, black 25%, black 75%, transparent)",
+                        maskComposite: "intersect",
+                        WebkitMaskComposite: "destination-in",
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
             )}
@@ -317,41 +220,334 @@ export default function Home() {
           {/* ─── Offres ─── */}
           <div id="nos-offres" className="mt-10">
             {isEntrepreneur ? (
-              <>
-                <h2 className={`font-title text-2xl md:text-3xl font-bold text-center mb-2 ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`}>Nos Offres</h2>
-                <p className="text-foreground-secondary text-center mb-6 max-w-lg mx-auto">
-                  Choisissez la formule qui correspond à votre profil et vos besoins.
-                </p>
+              <div className="py-10 md:py-16 max-w-5xl mx-auto space-y-8">
+                    {/* Bloc en-tête pleine largeur */}
+                    <div className="space-y-6 text-center">
+                      <h2 className={`font-title text-3xl md:text-5xl font-bold leading-tight ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`}>
+                        Pour les entrepreneurs
+                      </h2>
+                      <p className={`text-sm md:text-base leading-relaxed ${theme === "dark" ? "text-foreground-secondary" : "text-[#4a3010]"}`}>
+                        Vous voulez vous concentrer sur votre activité&nbsp;? Je m&apos;occupe du reste.
+                      </p>
+                      {/* Bénéfices horizontaux */}
+                      <div className="flex flex-wrap justify-center gap-x-20 gap-y-6 pt-2">
+                        {([
+                          {
+                            label: "Gain de temps",
+                            svg: (
+                                <svg className="h-10 w-10 flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6l3.75 3.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                              </svg>
+                            ),
+                          },
+                          {
+                            label: "Moins de stress",
+                            svg: (
+                                <svg className="h-10 w-10 flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                              </svg>
+                            ),
+                          },
+                          {
+                            label: "Gestion claire",
+                            svg: (
+                                <svg className="h-10 w-10 flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 0 1 0 3.75H5.625a1.875 1.875 0 0 1 0-3.75Z" />
+                              </svg>
+                            ),
+                          },
+                        ] as { label: string; svg: React.ReactNode }[]).map(({ svg, label }) => (
+                          <div key={label} className={`flex flex-col items-center gap-2 text-base md:text-lg font-semibold ${theme === "dark" ? "text-foreground-secondary" : "text-[#4a3010]"}`}>
+                            <span className={theme === "dark" ? "text-gold" : "text-[#8a6120]"}>{svg}</span>
+                            {label}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
 
-                <div className="mt-5">
-                  <EntrepreneurOffers
-                    offers={entrepreneurOffers}
-                    onSelect={handleOfferSelect}
-                    theme={theme}
-                  />
-                </div>
+                    {/* Deux colonnes : services + image */}
+                    <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6">
+                      <div className="flex-1 min-w-0 space-y-6">
+                        <div>
+                          <p className={`text-lg md:text-xl font-bold mb-5 ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`}>
+                            Mes services
+                          </p>
+                          <ul className="space-y-4">
+                            {[
+                              "Support administratif",
+                              "Pré-comptabilité",
+                              "Accompagnement sur mesure",
+                            ].map((s) => (
+                              <li key={s} className={`flex items-center gap-3 text-base md:text-lg font-medium ${theme === "dark" ? "text-foreground-secondary" : "text-[#4a3010]"}`}>
+                                <span className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full ${theme === "dark" ? "bg-gold/15" : "bg-[#8a6120]/10"}`}>
+                                  <svg className={`h-4 w-4 ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`} fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                  </svg>
+                                </span>
+                                {s}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
 
-              </>
+                      </div>
+
+                      {/* Colonne droite — image */}
+                      <div className="w-full md:w-[52%] flex-shrink-0 relative h-64 md:h-96">
+                        <div
+                          className={`absolute inset-0 bg-cover bg-center bg-no-repeat ${theme === "dark" ? "opacity-35" : "opacity-50"}`}
+                          style={{
+                            backgroundImage: "url('/entrepreneur-photo.jpg')",
+                            maskImage: "linear-gradient(to right, transparent, black 40%, black 60%, transparent), linear-gradient(to bottom, transparent, black 25%, black 75%, transparent)",
+                            WebkitMaskImage: "linear-gradient(to right, transparent, black 40%, black 60%, transparent), linear-gradient(to bottom, transparent, black 25%, black 75%, transparent)",
+                            maskComposite: "intersect",
+                            WebkitMaskComposite: "destination-in",
+                          }}
+                        />
+                      </div>
+                    </div>
+
+                    {/* ── Séparateur ── */}
+                    <div className="h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
+
+                    {/* ── Pourquoi travailler avec moi ? ── */}
+                    <div className="space-y-8">
+                      <h2 className={`font-title text-2xl md:text-3xl font-bold text-center ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`}>
+                        Pourquoi travailler avec moi&nbsp;?
+                      </h2>
+                      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                        {([
+                          {
+                            label: "Interlocuteur unique et dédié",
+                            svg: <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" /></svg>,
+                          },
+                          {
+                            label: "Réactivité — réponse sous 24h",
+                            svg: <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6l3.75 3.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>,
+                          },
+                          {
+                            label: "Rigueur et confidentialité",
+                            svg: <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" /></svg>,
+                          },
+                          {
+                            label: "Adaptation à vos outils et méthodes",
+                            svg: <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M10.343 3.94c.09-.542.56-.94 1.11-.94h1.093c.55 0 1.02.398 1.11.94l.149.894c.07.424.384.764.78.93.398.164.855.142 1.205-.108l.737-.527a1.125 1.125 0 0 1 1.45.12l.773.774c.39.389.44 1.002.12 1.45l-.527.737c-.25.35-.272.806-.107 1.204.165.397.505.71.93.78l.893.15c.543.09.94.559.94 1.109v1.094c0 .55-.397 1.02-.94 1.11l-.894.149c-.424.07-.764.383-.929.78-.165.398-.143.854.107 1.204l.527.738c.32.447.269 1.06-.12 1.45l-.774.773a1.125 1.125 0 0 1-1.449.12l-.738-.527c-.35-.25-.806-.272-1.203-.107-.398.165-.71.505-.781.929l-.149.894c-.09.542-.56.94-1.11.94h-1.094c-.55 0-1.019-.398-1.11-.94l-.148-.894c-.071-.424-.384-.764-.781-.93-.398-.164-.854-.142-1.204.108l-.738.527c-.447.32-1.06.269-1.45-.12l-.773-.774a1.125 1.125 0 0 1-.12-1.45l.527-.737c.25-.35.272-.806.108-1.204-.165-.397-.506-.71-.93-.78l-.894-.15c-.542-.09-.94-.56-.94-1.109v-1.094c0-.55.398-1.02.94-1.11l.894-.149c.424-.07.765-.383.93-.78.165-.398.143-.854-.108-1.204l-.526-.738a1.125 1.125 0 0 1 .12-1.45l.773-.773a1.125 1.125 0 0 1 1.45-.12l.737.527c.35.25.807.272 1.204.107.397-.165.71-.505.78-.929l.15-.894Z" /><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>,
+                          },
+                          {
+                            label: "Zéro engagement — devis gratuit",
+                            svg: <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M9 14.25l6-6m4.5-3.493V21.75l-3.75-1.5-3.75 1.5-3.75-1.5-3.75 1.5V4.757c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0c1.1.128 1.907 1.077 1.907 2.185Z" /></svg>,
+                          },
+                        ] as { label: string; svg: React.ReactNode }[]).map(({ svg, label }) => (
+                          <div
+                            key={label}
+                            className={`flex flex-col items-center gap-3 rounded-[10px] border border-border-gold p-4 text-center ${theme === "dark" ? "bg-background-tertiary" : "bg-white/60"}`}
+                          >
+                            <span className={theme === "dark" ? "text-gold" : "text-[#8a6120]"}>{svg}</span>
+                            <p className={`text-xs font-medium leading-snug ${theme === "dark" ? "text-foreground-secondary" : "text-[#4a3010]"}`}>{label}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* ── Séparateur ── */}
+                    <div className="h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
+
+                    {/* ── Comment ça se passe ? ── */}
+                    <div className="space-y-8">
+                      <h2 className={`font-title text-2xl md:text-3xl font-bold text-center ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`}>
+                        Comment ça se passe&nbsp;?
+                      </h2>
+                      <div className="relative">
+                        {/* Ligne de connexion desktop */}
+                        <div className="hidden md:block absolute top-8 left-[10%] right-[10%] h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                          {([
+                            {
+                              num: "1",
+                              title: "Prise de contact",
+                              desc: "Vous réservez un appel découverte gratuit",
+                              svg: <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" /></svg>,
+                            },
+                            {
+                              num: "2",
+                              title: "Échange",
+                              desc: "J’écoute vos besoins et vos objectifs",
+                              svg: <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 0 1-.825-.242m9.345-8.334a2.126 2.126 0 0 0-.476-.095 48.64 48.64 0 0 0-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0 0 11.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" /></svg>,
+                            },
+                            {
+                              num: "3",
+                              title: "Solution adaptée",
+                              desc: "Je vous propose un accompagnement sur mesure",
+                              svg: <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" /></svg>,
+                            },
+                            {
+                              num: "4",
+                              title: "Vous décidez",
+                              desc: "Vous choisissez en toute liberté, sans engagement",
+                              svg: <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>,
+                            },
+                          ] as { num: string; title: string; desc: string; svg: React.ReactNode }[]).map(({ num, title, desc, svg }) => (
+                            <div key={num} className="flex flex-col items-center text-center gap-3">
+                              <div className={`relative z-10 flex h-14 w-14 items-center justify-center rounded-full border-2 ${theme === "dark" ? "border-gold bg-background text-gold" : "border-[#8a6120] bg-white text-[#8a6120]"}`}>
+                                <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-gold text-[10px] font-bold text-white">{num}</span>
+                                {svg}
+                              </div>
+                              <p className={`text-sm font-bold ${theme === "dark" ? "text-foreground" : "text-[#2a1a00]"}`}>{title}</p>
+                              <p className={`text-xs leading-relaxed ${theme === "dark" ? "text-foreground-muted" : "text-[#6b4c1e]"}`}>{desc}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* ── Bandeau CTA final ── */}
+                    <div className={`rounded-[12px] border border-border-gold px-6 py-8 flex flex-col md:flex-row items-center justify-between gap-6 ${theme === "dark" ? "bg-background-tertiary" : "bg-white/70"}`}>
+                      <div>
+                        <p className={`text-xl md:text-2xl font-bold ${theme === "dark" ? "text-foreground" : "text-[#2a1a00]"}`}>
+                          Prêt à simplifier votre gestion&nbsp;?
+                        </p>
+                        <p className={`mt-1 text-sm ${theme === "dark" ? "text-foreground-muted" : "text-[#6b4c1e]"}`}>
+                          Faites le premier pas dès aujourd&apos;hui.
+                        </p>
+                      </div>
+                      <div className="flex flex-col items-center gap-2 flex-shrink-0">
+                        <button
+                          onClick={() => setShowOffersModal(true)}
+                          className="btn-gold text-sm md:text-base whitespace-nowrap"
+                        >
+                          Découvrir mes offres !
+                        </button>
+                        <p className={`text-xs ${theme === "dark" ? "text-foreground-muted" : "text-[#6b4c1e]"}`}>
+                          Réponse sous 24h garantie
+                        </p>
+                      </div>
+                    </div>
+
+              </div>
             ) : (
-              <div className="text-center space-y-6">
+              <div className="space-y-6">
                 {/* Ligne séparatrice dorée */}
                 <div className="relative">
                   <div className="h-px bg-gradient-to-r from-transparent via-gold to-transparent opacity-70" />
                   <div className="w-3 h-3 mx-auto -mt-1.5 rounded-full bg-gold shadow-[0_0_20px_rgba(201,168,76,0.7)]" />
                 </div>
 
-                <h2 className={`font-title text-2xl md:text-3xl font-bold uppercase ${theme === "dark" ? "text-[#f3dfc0]" : "text-[#8a6120]"}`}>
-                  Prêt à optimiser votre cabinet ?
-                </h2>
-                <button
-                  onClick={() => setShowPartnershipModal(true)}
-                  className="btn-gold inline-block text-sm md:text-base"
-                >
-                  Demander un partenariat
-                </button>
+                {/* ── Pourquoi travailler avec nous ? ── */}
+                <div className="space-y-8 pt-4">
+                  <h2 className={`font-title text-2xl md:text-3xl font-bold text-center ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`}>
+                    Pourquoi me faire confiance&nbsp;?
+                  </h2>
+                  <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                    {([
+                      {
+                        label: "Confidentialité totale",
+                        svg: <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" /></svg>,
+                      },
+                      {
+                        label: "Respect des délais",
+                        svg: <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6l3.75 3.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>,
+                      },
+                      {
+                        label: "Qualité constante",
+                        svg: <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" /></svg>,
+                      },
+                      {
+                        label: "Collaboration fluide",
+                        svg: <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" /></svg>,
+                      },
+                      {
+                        label: "Adaptation à vos outils",
+                        svg: <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M10.343 3.94c.09-.542.56-.94 1.11-.94h1.093c.55 0 1.02.398 1.11.94l.149.894c.07.424.384.764.78.93.398.164.855.142 1.205-.108l.737-.527a1.125 1.125 0 0 1 1.45.12l.773.774c.39.389.44 1.002.12 1.45l-.527.737c-.25.35-.272.806-.107 1.204.165.397.505.71.93.78l.893.15c.543.09.94.559.94 1.109v1.094c0 .55-.397 1.02-.94 1.11l-.894.149c-.424.07-.764.383-.929.78-.165.398-.143.854.107 1.204l.527.738c.32.447.269 1.06-.12 1.45l-.774.773a1.125 1.125 0 0 1-1.449.12l-.738-.527c-.35-.25-.806-.272-1.203-.107-.398.165-.71.505-.781.929l-.149.894c-.09.542-.56.94-1.11.94h-1.094c-.55 0-1.019-.398-1.11-.94l-.148-.894c-.071-.424-.384-.764-.781-.93-.398-.164-.854-.142-1.204.108l-.738.527c-.447.32-1.06.269-1.45-.12l-.773-.774a1.125 1.125 0 0 1-.12-1.45l.527-.737c.25-.35.272-.806.108-1.204-.165-.397-.506-.71-.93-.78l-.894-.15c-.542-.09-.94-.56-.94-1.109v-1.094c0-.55.398-1.02.94-1.11l.894-.149c.424-.07.765-.383.93-.78.165-.398.143-.854-.108-1.204l-.526-.738a1.125 1.125 0 0 1 .12-1.45l.773-.773a1.125 1.125 0 0 1 1.45-.12l.737.527c.35.25.807.272 1.204.107.397-.165.71-.505.78-.929l.15-.894Z" /><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>,
+                      },
+                    ] as { label: string; svg: React.ReactNode }[]).map(({ svg, label }) => (
+                      <div
+                        key={label}
+                        className={`flex flex-col items-center gap-3 rounded-[10px] border border-border-gold p-4 text-center ${theme === "dark" ? "bg-background-tertiary" : "bg-white/60"}`}
+                      >
+                        <span className={theme === "dark" ? "text-gold" : "text-[#8a6120]"}>{svg}</span>
+                        <p className={`text-xs font-medium leading-snug ${theme === "dark" ? "text-foreground-secondary" : "text-[#4a3010]"}`}>{label}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
+
+                {/* ── Comment ça se passe ? ── */}
+                <div className="space-y-8">
+                  <h2 className={`font-title text-2xl md:text-3xl font-bold text-center ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`}>
+                    Comment ça se passe&nbsp;?
+                  </h2>
+                  <div className="relative">
+                    <div className="hidden md:block absolute top-8 left-[10%] right-[10%] h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                      {([
+                        {
+                          num: "1",
+                          title: "Prise de contact",
+                          desc: "Vous me contactez pour présenter votre cabinet",
+                          svg: <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" /></svg>,
+                        },
+                        {
+                          num: "2",
+                          title: "Analyse des besoins",
+                          desc: "J’échange avec vous sur le volume et les missions à externaliser",
+                          svg: <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 0 1-.825-.242m9.345-8.334a2.126 2.126 0 0 0-.476-.095 48.64 48.64 0 0 0-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0 0 11.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" /></svg>,
+                        },
+                        {
+                          num: "3",
+                          title: "Proposition de partenariat",
+                          desc: "Je vous propose les modalités de la mission",
+                          svg: <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" /></svg>,
+                        },
+                        {
+                          num: "4",
+                          title: "Démarrage",
+                          desc: "J’intègre vos process et prends en charge vos dossiers",
+                          svg: <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>,
+                        },
+                      ] as { num: string; title: string; desc: string; svg: React.ReactNode }[]).map(({ num, title, desc, svg }) => (
+                        <div key={num} className="flex flex-col items-center text-center gap-3">
+                          <div className={`relative z-10 flex h-14 w-14 items-center justify-center rounded-full border-2 ${theme === "dark" ? "border-gold bg-background text-gold" : "border-[#8a6120] bg-white text-[#8a6120]"}`}>
+                            <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-gold text-[10px] font-bold text-white">{num}</span>
+                            {svg}
+                          </div>
+                          <p className={`text-sm font-bold ${theme === "dark" ? "text-foreground" : "text-[#2a1a00]"}`}>{title}</p>
+                          <p className={`text-xs leading-relaxed ${theme === "dark" ? "text-foreground-muted" : "text-[#6b4c1e]"}`}>{desc}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
+
+                {/* ── Bandeau CTA ── */}
+                <div className={`rounded-[12px] border border-border-gold px-6 py-8 flex flex-col md:flex-row items-center justify-between gap-6 ${theme === "dark" ? "bg-background-tertiary" : "bg-white/70"}`}>
+                  <div>
+                    <p className={`text-xl md:text-2xl font-bold ${theme === "dark" ? "text-foreground" : "text-[#2a1a00]"}`}>
+                      Prêt à optimiser votre cabinet&nbsp;?
+                    </p>
+                    <p className={`mt-1 text-sm ${theme === "dark" ? "text-foreground-muted" : "text-[#6b4c1e]"}`}>
+                      Contactez-moi dès aujourd&apos;hui.
+                    </p>
+                  </div>
+                  <div className="flex flex-col items-center gap-2 flex-shrink-0">
+                    <button
+                      onClick={() => setShowPartnershipModal(true)}
+                      className="btn-gold text-sm md:text-base whitespace-nowrap"
+                    >
+                      Demander un partenariat
+                    </button>
+                    <p className={`text-xs ${theme === "dark" ? "text-foreground-muted" : "text-[#6b4c1e]"}`}>
+                      Réponse sous 24h garantie
+                    </p>
+                  </div>
+                </div>
               </div>
             )}
           </div>
+          </div>{/* end animated wrapper */}
         </div>
       </section>
 
@@ -376,6 +572,27 @@ export default function Home() {
         </div>
       </footer>
 
+      {/* ─── MODAL OFFRES ENTREPRENEUR ─── */}
+      {showOffersModal && (
+        <OffersModal
+          theme={theme}
+          onClose={() => setShowOffersModal(false)}
+          onSelectOffer={(offer) => {
+            setShowOffersModal(false);
+            setBookingOffer(offer);
+          }}
+        />
+      )}
+
+      {/* ─── MODAL BOOKING ─── */}
+      {bookingOffer && (
+        <BookingModal
+          offer={bookingOffer}
+          theme={theme}
+          onClose={() => setBookingOffer(null)}
+        />
+      )}
+
       {/* ─── MODAL PAIEMENT ─── */}
       {selectedOffer && (
         <SubscriptionModal
@@ -389,6 +606,73 @@ export default function Home() {
       {showPartnershipModal && (
         <PartnershipModal theme={theme} onClose={() => setShowPartnershipModal(false)} />
       )}
+    </div>
+  );
+}
+
+function OffersModal({
+  theme,
+  onClose,
+  onSelectOffer,
+}: {
+  theme: "dark" | "light";
+  onClose: () => void;
+  onSelectOffer: (offer: Offer) => void;
+}) {
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = ""; };
+  }, []);
+
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [onClose]);
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 md:p-8"
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+    >
+      {/* Backdrop */}
+      <div className={`absolute inset-0 backdrop-blur-sm animate-[fadeIn_200ms_ease-out] ${theme === "dark" ? "bg-black/75" : "bg-slate-900/35"}`} />
+
+      {/* Boîte modale */}
+      <div className={`relative w-full max-w-4xl rounded-[12px] border border-border-gold animate-[slideUp_300ms_ease-out] max-h-[90vh] overflow-y-auto ${theme === "dark" ? "bg-[#0b132b] shadow-[0_10px_40px_rgba(0,0,0,0.6)]" : "bg-[#f5f0e8] shadow-[0_12px_36px_rgba(15,23,42,0.22)]"}`}>
+        {/* Header */}
+        <div className={`sticky top-0 z-10 flex items-center justify-between px-6 py-4 border-b border-border-gold ${theme === "dark" ? "bg-[#0b132b]/95 backdrop-blur" : "bg-[#f5f0e8]/95 backdrop-blur"}`}>
+          <h2 className={`font-title text-xl font-bold ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`}>
+            Mes Offres
+          </h2>
+          <button
+            onClick={onClose}
+            aria-label="Fermer"
+            className={`flex h-9 w-9 items-center justify-center rounded-full border border-border-gold transition-colors ${theme === "dark" ? "text-foreground-muted hover:text-foreground" : "text-[#8a6120] hover:text-[#5a3a0a]"}`}
+          >
+            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Contenu */}
+        <div className="px-6 py-8">
+          <p className="text-foreground-secondary text-center mb-8 max-w-lg mx-auto">
+            Choisissez la formule qui correspond à votre profil et vos besoins.
+          </p>
+          <EntrepreneurOffers
+            offers={entrepreneurOffers}
+            onSelect={(offer) => {
+              onClose();
+              onSelectOffer(offer);
+            }}
+            theme={theme}
+          />
+        </div>
+      </div>
     </div>
   );
 }

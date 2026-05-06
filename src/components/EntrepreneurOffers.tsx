@@ -18,9 +18,14 @@ export default function EntrepreneurOffers({ offers, onSelect, theme }: Props) {
     <div className="space-y-4">
       {/* Subscription offers — horizontal scroll on mobile, grid on desktop */}
       <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-3 pt-3 -mx-6 px-6 md:mx-0 md:px-0 md:grid md:grid-cols-3 md:overflow-visible md:pb-0 md:pt-0 md:snap-none">
-        {subscriptionOffers.map((offer) => (
+        {subscriptionOffers.map((offer, idx) => (
           <div key={offer.id} className="min-w-[75vw] sm:min-w-[55vw] md:min-w-0 snap-center">
-            <OfferCard offer={offer} onSelect={onSelect} theme={theme} />
+            <OfferCard
+              offer={offer}
+              onSelect={onSelect}
+              theme={theme}
+              previousOfferTitle={idx > 0 ? subscriptionOffers[idx - 1].title : undefined}
+            />
           </div>
         ))}
       </div>
@@ -60,7 +65,7 @@ export default function EntrepreneurOffers({ offers, onSelect, theme }: Props) {
           <div className="px-1 text-center text-xs text-foreground-muted">
             <p className="font-medium text-foreground-secondary">Sans engagement • Toutes les prestations sont adaptables selon votre activité</p>
             <div className="mt-2 flex items-center justify-center gap-3 text-foreground-muted">
-              <p className={`font-semibold ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`}>contact@worldgestion.fr</p>
+              <p className={`font-semibold ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`}>support@worldgestion.fr</p>
               <span className="text-foreground-muted">•</span>
               <p className={`font-semibold ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`}>0756434016</p>
             </div>
@@ -75,10 +80,12 @@ function OfferCard({
   offer,
   onSelect,
   theme,
+  previousOfferTitle,
 }: {
   offer: Offer;
   onSelect: (offer: Offer) => void;
   theme: "dark" | "light";
+  previousOfferTitle?: string;
 }) {
   return (
     <div
@@ -99,6 +106,18 @@ function OfferCard({
       <p className="mt-1 text-xs text-foreground-secondary leading-relaxed">
         {offer.description}
       </p>
+      {previousOfferTitle && (
+        <p className={`mt-2 flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-[10px] font-medium ${
+          theme === "dark"
+            ? "bg-gold/10 text-gold/80"
+            : "bg-[#8a6120]/10 text-[#8a6120]/80"
+        }`}>
+          <svg className="h-3 w-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z" clipRule="evenodd" />
+          </svg>
+          Inclut tout l&apos;offre <span className="font-semibold">{previousOfferTitle}</span>, plus&nbsp;:
+        </p>
+      )}
       <p className="mt-4">
         <span className={`text-2xl font-extrabold ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`}>
           {offer.priceLabel}

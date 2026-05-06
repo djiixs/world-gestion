@@ -38,8 +38,8 @@ export default function MentionsLegalesPage() {
               <li><strong className="text-foreground">Numéro de TVA intracommunautaire :</strong> [À compléter]</li>
               <li><strong className="text-foreground">Directeur de la publication :</strong> [Nom à compléter]</li>
               <li><strong className="text-foreground">Email :</strong>{" "}
-                <a href="mailto:contact@worldgestion.fr" className="text-gold hover:text-gold-light">
-                  contact@worldgestion.fr
+                <a href="mailto:support@worldgestion.fr" className="text-gold hover:text-gold-light">
+                  support@worldgestion.fr
                 </a>
               </li>
               <li><strong className="text-foreground">Téléphone :</strong>{" "}

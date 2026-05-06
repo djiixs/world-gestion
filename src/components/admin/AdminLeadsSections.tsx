@@ -23,6 +23,8 @@ type LeadRecord = {
   cabinetName?: string;
   responsableName?: string;
   note?: string;
+  bookingDate?: string;
+  bookingTime?: string;
 };
 
 interface Props {
@@ -331,6 +333,7 @@ export default function AdminLeadsSections({ leads: initialLeads }: Props) {
               <th className="px-2 py-2 text-left font-semibold text-foreground-muted">Email</th>
               <th className="px-2 py-2 text-left font-semibold text-foreground-muted">Telephone</th>
               <th className="px-2 py-2 text-left font-semibold text-foreground-muted">Offre</th>
+              <th className="px-2 py-2 text-left font-semibold text-foreground-muted">RDV</th>
               <th className="px-2 py-2 text-left font-semibold text-foreground-muted">Note</th>
               <th className="px-2 py-2 text-left font-semibold text-foreground-muted">Actions</th>
             </tr>
@@ -400,13 +403,23 @@ export default function AdminLeadsSections({ leads: initialLeads }: Props) {
                     {lead.offerTitle}
                   </button>
                 </td>
+                <td className="px-2 py-2 text-foreground-secondary">
+                  {lead.bookingDate
+                    ? (
+                      <span className="inline-flex flex-col gap-0.5">
+                        <span className="text-gold font-semibold">{new Date(lead.bookingDate).toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit", year: "numeric" })}</span>
+                        {lead.bookingTime && <span className="text-xs text-foreground-muted">{lead.bookingTime}</span>}
+                      </span>
+                    )
+                    : <span className="text-foreground-muted/40">—</span>}
+                </td>
                 <td className="px-2 py-2 text-foreground-secondary">{lead.note || "-"}</td>
                 <td className="px-2 py-2">{renderActionMenu(lead.id, lead.state)}</td>
               </tr>
             ))}
             {activeItems.length === 0 && (
               <tr>
-                <td className="px-2 py-4 text-foreground-muted" colSpan={8}>
+                <td className="px-2 py-4 text-foreground-muted" colSpan={9}>
                   Aucune demande dans cette section.
                 </td>
               </tr>
@@ -524,7 +537,7 @@ export default function AdminLeadsSections({ leads: initialLeads }: Props) {
           >
             <div className="flex items-start justify-between gap-3">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wide text-gold/85">Détail de l'offre</p>
+                <p className="text-xs font-semibold uppercase tracking-wide text-gold/85">Détail de l&apos;offre</p>
                 <h3 className="mt-1 text-xl font-bold text-foreground">{selectedOffer.title}</h3>
               </div>
               <button
@@ -543,7 +556,7 @@ export default function AdminLeadsSections({ leads: initialLeads }: Props) {
             </div>
 
             <div className="mt-4">
-              <p className="text-xs font-semibold uppercase tracking-wide text-foreground-muted">Ce que l'offre inclut</p>
+              <p className="text-xs font-semibold uppercase tracking-wide text-foreground-muted">Ce que l&apos;offre inclut</p>
               <ul className="mt-2 space-y-1.5 text-sm text-foreground-secondary">
                 {selectedOffer.features.map((feature) => (
                   <li key={feature} className="flex items-start gap-2">

@@ -6,64 +6,73 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const {
-      cabinetName,
-      responsableName,
+      firstName,
+      lastName,
       email,
       phone,
-      nbDossiers,
-      message,
+      clientType,
+      need,
       offerId,
       offerTitle,
+      bookingDate,
+      bookingTime,
     } = body;
 
-    if (!cabinetName || !responsableName || !email || !phone || !offerId) {
+    if (!firstName || !lastName || !email || !phone || !offerId || !bookingDate || !bookingTime) {
       return NextResponse.json(
         { error: "Champs obligatoires manquants" },
         { status: 400 }
       );
     }
 
+    const type = clientType === "cabinet" ? "cabinet" : "entrepreneur";
+
     await addLead({
-      type: "cabinet",
+      type,
       offerId,
       offerTitle: offerTitle || offerId,
       email,
       phone,
-      cabinetName,
-      responsableName,
-      nbDossiers: nbDossiers || undefined,
-      note: message || undefined,
+      firstName,
+      lastName,
+      note: need || undefined,
+      bookingDate,
+      bookingTime,
     });
 
     const adminEmail = process.env.ADMIN_NOTIFY_EMAIL ?? "support@worldgestion.fr";
+    const rdvDate = new Date(bookingDate).toLocaleDateString("fr-FR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
 
     await sendEmail({
       to: adminEmail,
-      subject: `Nouveau partenariat cabinet — ${cabinetName}`,
+      subject: `Nouveau RDV — ${firstName} ${lastName} (${offerTitle || offerId})`,
       html: `
         <div style="font-family:sans-serif;max-width:560px;margin:0 auto;color:#1a1a1a;">
-          <h2 style="color:#b8962e;margin-bottom:4px;">Nouvelle demande de partenariat cabinet</h2>
+          <h2 style="color:#b8962e;margin-bottom:4px;">Nouveau rendez-vous client</h2>
           <p style="color:#666;margin-top:0;">World Gestion — notification automatique</p>
           <table style="width:100%;border-collapse:collapse;margin-top:16px;">
-            <tr><td style="padding:6px 0;color:#666;width:140px;">Cabinet</td><td style="padding:6px 0;font-weight:600;">${cabinetName}</td></tr>
-            <tr><td style="padding:6px 0;color:#666;">Responsable</td><td style="padding:6px 0;">${responsableName}</td></tr>
+            <tr><td style="padding:6px 0;color:#666;width:140px;">Nom</td><td style="padding:6px 0;font-weight:600;">${firstName} ${lastName}</td></tr>
             <tr><td style="padding:6px 0;color:#666;">Email</td><td style="padding:6px 0;"><a href="mailto:${email}" style="color:#b8962e;">${email}</a></td></tr>
             <tr><td style="padding:6px 0;color:#666;">Téléphone</td><td style="padding:6px 0;">${phone}</td></tr>
+            <tr><td style="padding:6px 0;color:#666;">Type</td><td style="padding:6px 0;">${type === "cabinet" ? "Cabinet" : "Entrepreneur"}</td></tr>
             <tr><td style="padding:6px 0;color:#666;">Offre</td><td style="padding:6px 0;font-weight:600;">${offerTitle || offerId}</td></tr>
-            ${nbDossiers ? `<tr><td style="padding:6px 0;color:#666;">Nb dossiers/mois</td><td style="padding:6px 0;">${nbDossiers}</td></tr>` : ""}
-            ${message ? `<tr><td style="padding:6px 0;color:#666;vertical-align:top;">Message</td><td style="padding:6px 0;">${message}</td></tr>` : ""}
+            <tr><td style="padding:6px 0;color:#666;">Date RDV</td><td style="padding:6px 0;font-weight:600;color:#b8962e;">${rdvDate} à ${bookingTime}</td></tr>
+            ${need ? `<tr><td style="padding:6px 0;color:#666;vertical-align:top;">Besoin</td><td style="padding:6px 0;">${need}</td></tr>` : ""}
           </table>
           <hr style="margin:20px 0;border:none;border-top:1px solid #e5e5e5;" />
           <p style="font-size:12px;color:#999;">Consultez le détail dans l'<a href="https://worldgestion.fr/admin" style="color:#b8962e;">espace admin</a>.</p>
         </div>
       `,
       replyTo: email,
-    }).catch((err) => console.error("[contact] Notif email échouée :", err));
+    }).catch((err) => console.error("[booking] Notif email échouée :", err));
 
     return NextResponse.json({ success: true });
   } catch (err) {
-    console.error("[contact] Erreur interne :", err);
-
+    console.error("[booking] Erreur interne :", err);
     return NextResponse.json(
       { error: "Erreur interne" },
       { status: 500 }

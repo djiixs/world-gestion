@@ -8,8 +8,8 @@ export default function Footer() {
             07 56 43 40 16
           </a>
           <span className="hidden sm:inline text-foreground/20">|</span>
-          <a href="mailto:contact@worldgestion.fr" className="hover:text-primary transition-colors duration-200">
-            contact@worldgestion.fr
+          <a href="mailto:support@worldgestion.fr" className="hover:text-primary transition-colors duration-200">
+            support@worldgestion.fr
           </a>
           <span className="hidden sm:inline text-foreground/20">|</span>
           <a href="https://wa.me/33756434016" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors duration-200">

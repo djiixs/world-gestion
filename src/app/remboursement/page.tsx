@@ -90,8 +90,8 @@ export default function RemboursementPage() {
             <ol className="list-decimal list-inside mt-2 space-y-2">
               <li>
                 Envoyer un email à{" "}
-                <a href="mailto:contact@worldgestion.fr" className="text-gold hover:text-gold-light">
-                  contact@worldgestion.fr
+                <a href="mailto:support@worldgestion.fr" className="text-gold hover:text-gold-light">
+                  support@worldgestion.fr
                 </a>{" "}
                 en précisant son nom, la formule concernée et le motif de la demande.
               </li>
@@ -128,7 +128,7 @@ export default function RemboursementPage() {
             <h2 className="text-lg font-semibold text-foreground mb-3">8. Contact</h2>
             <p>Pour toute question relative à un remboursement :</p>
             <ul className="mt-2 space-y-1">
-              <li>Email : <a href="mailto:contact@worldgestion.fr" className="text-gold hover:text-gold-light">contact@worldgestion.fr</a></li>
+              <li>Email : <a href="mailto:support@worldgestion.fr" className="text-gold hover:text-gold-light">support@worldgestion.fr</a></li>
               <li>Téléphone : <a href="tel:+33756434016" className="text-gold hover:text-gold-light">07 56 43 40 16</a></li>
             </ul>
           </section>

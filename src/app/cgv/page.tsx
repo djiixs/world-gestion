@@ -90,8 +90,8 @@ export default function CGVPage() {
             </p>
             <p className="mt-2">
               Pour exercer ce droit, le Client doit adresser sa demande par email à{" "}
-              <a href="mailto:contact@worldgestion.fr" className="text-gold hover:text-gold-light">
-                contact@worldgestion.fr
+              <a href="mailto:support@worldgestion.fr" className="text-gold hover:text-gold-light">
+                support@worldgestion.fr
               </a>.
             </p>
           </section>
@@ -153,7 +153,7 @@ export default function CGVPage() {
               Pour toute question relative aux présentes CGV, le Client peut contacter le Prestataire :
             </p>
             <ul className="mt-2 space-y-1">
-              <li>Email : <a href="mailto:contact@worldgestion.fr" className="text-gold hover:text-gold-light">contact@worldgestion.fr</a></li>
+              <li>Email : <a href="mailto:support@worldgestion.fr" className="text-gold hover:text-gold-light">support@worldgestion.fr</a></li>
               <li>Téléphone : <a href="tel:+33756434016" className="text-gold hover:text-gold-light">07 56 43 40 16</a></li>
             </ul>
           </section>

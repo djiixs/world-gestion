@@ -51,7 +51,7 @@ export default function AdminLogoutButton() {
           <div className="relative w-full max-w-sm rounded-xl border border-border-gold bg-background-tertiary p-5 shadow-[0_12px_40px_rgba(0,0,0,0.45)]">
             <h3 className="font-title text-lg text-gold">Confirmer la deconnexion</h3>
             <p className="mt-2 text-sm text-foreground-secondary">
-              Voulez-vous vraiment vous deconnecter de l'espace admin ?
+              Voulez-vous vraiment vous deconnecter de l&apos;espace admin ?
             </p>
 
             <div className="mt-5 flex items-center justify-end gap-3">

@@ -22,6 +22,8 @@ export interface LeadRecord {
   responsableName?: string;
   nbDossiers?: string;
   note?: string;
+  bookingDate?: string;
+  bookingTime?: string;
 }
 
 export interface PurchaseRecord {
