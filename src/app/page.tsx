@@ -661,16 +661,7 @@ export default function Home() {
       </section>
 
       {/* ─── Comment ça se passe ─── */}
-      <section
-        className={`px-6 py-14 md:py-20 ${theme === "dark" ? "bg-[#0d1630]" : "bg-[#faf8f5]"}`}
-        style={theme === "dark" ? {
-          backgroundImage: "radial-gradient(circle at 1px 1px, rgba(201,168,76,0.07) 1px, transparent 0)",
-          backgroundSize: "28px 28px",
-        } : {
-          backgroundImage: "radial-gradient(circle at 1px 1px, rgba(26,42,68,0.06) 1px, transparent 0)",
-          backgroundSize: "28px 28px",
-        }}
-      >
+      <section className="px-6 py-10 md:py-12 bg-background">
         <div className="mx-auto max-w-5xl">
           <h2 className={`font-title text-center text-2xl font-bold md:text-3xl ${theme === "dark" ? "text-gold" : "text-[#1a2a44]"}`}>
             Comment ça se passe ?
