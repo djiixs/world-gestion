@@ -19,7 +19,7 @@ export const entrepreneurOffers: Offer[] = [
   {
     id: "ent-confort",
     title: "Confort",
-    description: "Pour une gestion administrative complète et sereine",
+    description: "Pour structurer et optimiser votre gestion",
     features: [
       "Saisie de factures",
       "Classement des pièces comptables",
@@ -37,7 +37,7 @@ export const entrepreneurOffers: Offer[] = [
   {
     id: "ent-premium",
     title: "Premium",
-    description: "L'accompagnement complet pour vous libérer l'esprit",
+    description: "Pour une gestion compléte et sans stress",
     features: [
       "Devis & facturation",
       "Relance clients",

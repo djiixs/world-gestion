@@ -114,9 +114,9 @@ function OfferCard({
           {offer.badge}
         </span>
       )}
-      <h3 className="text-lg font-extrabold tracking-tight text-gold drop-shadow-[0_0_8px_rgba(201,168,76,0.35)]">{offer.title}</h3>
+      <h3 className="text-xl font-extrabold tracking-tight text-gold drop-shadow-[0_0_8px_rgba(201,168,76,0.35)]">{offer.title}</h3>
       <div className="mt-1 h-[2px] w-8 rounded-full bg-gold/50" />
-      <p className="mt-1 text-xs text-foreground-secondary leading-relaxed">
+      <p className={`mt-1 text-xs font-medium leading-relaxed ${theme === "dark" ? "text-gold/80" : "text-[#8a6120]"}`}>
         {offer.description}
       </p>
       <p className="mt-4">
@@ -139,6 +139,21 @@ function OfferCard({
           </li>
         ))}
       </ul>
+      {offer.id === "ent-essentielle" && (
+        <p className="mt-3 text-xs text-foreground-secondary leading-relaxed">
+          Idéal pour démarrer sereinement
+        </p>
+      )}
+      {offer.id === "ent-confort" && (
+        <p className="mt-3 text-xs text-foreground-secondary leading-relaxed">
+          Pour une gestion administrative complète et sereine
+        </p>
+      )}
+      {offer.id === "ent-premium" && (
+        <p className="mt-3 text-xs text-foreground-secondary leading-relaxed">
+          L&apos;accompagnement complet pour vous libérer l&apos;esprit
+        </p>
+      )}
       <button
         onClick={() => onReserveCall ? onReserveCall(offer) : onSelect(offer)}
         className={cn(

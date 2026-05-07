@@ -155,13 +155,6 @@ export default function Home() {
             />
             <div className="min-w-0">
               <span className={`font-bold text-lg sm:text-2xl md:text-3xl tracking-wide block ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`}>World Gestion</span>
-              <span className={`block max-w-[220px] sm:max-w-none text-[11px] sm:text-xs md:text-sm leading-snug text-left ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`}>
-                Je prends en charge le traitement administratif
-                <span className="sm:hidden"> et votre pré-comptabilité avec expertise et rigueur</span>
-                <span className="hidden sm:inline">
-                  <br />et votre pré-comptabilité avec expertise et rigueur
-                </span>
-              </span>
             </div>
           </div>
 
@@ -170,6 +163,26 @@ export default function Home() {
             Simplifiez et optimisez votre<br />
             <span className={theme === "dark" ? "text-white" : "text-black"}>gestion d&apos;entreprise.</span>
           </h1>
+          <p className={`mt-3 text-sm sm:text-base leading-snug ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`}>
+            Je prends en charge le traitement administratif<br />
+            et votre pré-comptabilité
+          </p>
+
+          {/* Trust bar */}
+          <div className="mt-6 flex flex-wrap gap-3">
+            <div className={`flex items-center gap-2 rounded-xl border px-4 py-2 text-sm font-medium shadow-sm ${theme === "dark" ? "border-white/10 bg-white/[0.04] text-foreground-secondary" : "border-[#e2e8f0] bg-white text-[#444] shadow-[0_2px_8px_rgba(0,0,0,0.06)]"}`}>
+              <svg className="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" /></svg>
+              <span>Accompagnement humain</span>
+            </div>
+            <div className={`flex items-center gap-2 rounded-xl border px-4 py-2 text-sm font-medium shadow-sm ${theme === "dark" ? "border-white/10 bg-white/[0.04] text-foreground-secondary" : "border-[#e2e8f0] bg-white text-[#444] shadow-[0_2px_8px_rgba(0,0,0,0.06)]"}`}>
+              <svg className="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M10.343 3.94c.09-.542.56-.94 1.11-.94h1.093c.55 0 1.02.398 1.11.94l.149.894c.07.424.384.764.78.93.398.164.855.142 1.205-.108l.737-.527a1.125 1.125 0 0 1 1.45.12l.773.774c.39.389.44 1.002.12 1.45l-.527.737c-.25.35-.272.806-.107 1.204.165.397.505.71.93.78l.893.15c.543.09.94.559.94 1.109v1.094c0 .55-.397 1.02-.94 1.11l-.894.149c-.424.07-.764.383-.929.78-.165.398-.143.854.107 1.204l.527.738c.32.447.269 1.06-.12 1.45l-.774.773a1.125 1.125 0 0 1-1.449.12l-.738-.527c-.35-.25-.806-.272-1.203-.107-.398.165-.71.505-.781.929l-.149.894c-.09.542-.56.94-1.11.94h-1.094c-.55 0-1.019-.398-1.11-.94l-.148-.894c-.071-.424-.384-.764-.781-.93-.398-.164-.854-.142-1.204.108l-.738.527c-.447.32-1.06.269-1.45-.12l-.773-.774a1.125 1.125 0 0 1-.12-1.45l.527-.737c.25-.35.272-.806.108-1.204-.165-.397-.506-.71-.93-.78l-.894-.15c-.542-.09-.94-.56-.94-1.109v-1.094c0-.55.398-1.02.94-1.11l.894-.149c.424-.07.765-.383.93-.78.165-.398.143-.854-.108-1.204l-.526-.738a1.125 1.125 0 0 1 .12-1.45l.773-.773a1.125 1.125 0 0 1 1.45-.12l.737.527c.35.25.807.272 1.204.107.397-.165.71-.505.78-.929l.15-.894Z" /><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>
+              <span>Flexible et sur-mesure</span>
+            </div>
+            <div className={`flex items-center gap-2 rounded-xl border px-4 py-2 text-sm font-medium shadow-sm ${theme === "dark" ? "border-white/10 bg-white/[0.04] text-foreground-secondary" : "border-[#e2e8f0] bg-white text-[#444] shadow-[0_2px_8px_rgba(0,0,0,0.06)]"}`}>
+              <svg className="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+              <span>Réponse sous 24h</span>
+            </div>
+          </div>
 
           {/* Subtitle */}
 
@@ -313,7 +326,7 @@ export default function Home() {
                     {[
                       {
                         title: "Support administratif",
-                        description: "Je gere vos taches administratives courantes : courriers, classement, relances...",
+                        description: "Gestion de vos tâches administratives courantes : courriers, classement, relances, suivi de dossiers.",
                         icon: (
                           <>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
@@ -322,7 +335,7 @@ export default function Home() {
                       },
                       {
                         title: "Pre-comptabilite",
-                        description: "Je saisis et organise vos documents comptables pour une comptabilite toujours a jour.",
+                        description: "Saisie, suivi et organisation de vos documents comptables pour une comptabilité toujours à jour.",
                         icon: <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 15.75V18m-7.5-6.75h.008v.008H8.25v-.008Zm0 2.25h.008v.008H8.25V13.5Zm0 2.25h.008v.008H8.25v-.008Zm0 2.25h.008v.008H8.25V18Zm2.498-6.75h.007v.008h-.007v-.008Zm0 2.25h.007v.008h-.007V13.5Zm0 2.25h.007v.008h-.007v-.008Zm0 2.25h.007v.008h-.007V18Zm2.504-6.75h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V13.5Zm0 2.25h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V18Zm2.498-6.75h.008v.008h-.008v-.008ZM15.75 13.5h.008v.008h-.008V13.5ZM6 6.75A.75.75 0 0 1 6.75 6h10.5a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-.75.75H6.75A.75.75 0 0 1 6 8.25v-1.5Z" />,
                       },
                       {
@@ -643,6 +656,83 @@ export default function Home() {
                 </button>
               </div>
             )}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── Comment ça se passe ─── */}
+      <section
+        className={`px-6 py-14 md:py-20 ${theme === "dark" ? "bg-[#0d1630]" : "bg-[#faf8f5]"}`}
+        style={theme === "dark" ? {
+          backgroundImage: "radial-gradient(circle at 1px 1px, rgba(201,168,76,0.07) 1px, transparent 0)",
+          backgroundSize: "28px 28px",
+        } : {
+          backgroundImage: "radial-gradient(circle at 1px 1px, rgba(26,42,68,0.06) 1px, transparent 0)",
+          backgroundSize: "28px 28px",
+        }}
+      >
+        <div className="mx-auto max-w-5xl">
+          <h2 className={`font-title text-center text-2xl font-bold md:text-3xl ${theme === "dark" ? "text-gold" : "text-[#1a2a44]"}`}>
+            Comment ça se passe ?
+          </h2>
+          <div className="mx-auto mt-3 h-[2px] w-12 rounded-full bg-gold" />
+
+          <div className="relative mt-14">
+            {/* Dotted line — centred on the icon boxes (h-12 = 48px + p-2*2 = 16px → total 64px, centre = 32px) */}
+            <div className="absolute left-[calc(12.5%+40px)] right-[calc(12.5%+40px)] top-[32px] hidden border-t border-dashed border-border md:block" style={{zIndex:0}} />
+
+            <div className="relative grid grid-cols-2 gap-10 md:grid-cols-4" style={{zIndex:1}}>
+              {[
+                { icon: (
+                  <svg className="h-12 w-12" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" /></svg>
+                ), num: "1", title: "Contact", sub: "Vous réservez un appel" },
+                { icon: (
+                  <svg className="h-12 w-12" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 0 1-.825-.242m9.345-8.334a2.126 2.126 0 0 0-.476-.095 48.64 48.64 0 0 0-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0 0 11.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" /></svg>
+                ), num: "2", title: "Échange", sub: "Analyse de vos besoins" },
+                { icon: (
+                  <svg className="h-12 w-12" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M15.042 21.672 13.684 16.6m0 0-2.51 2.225.569-9.47 5.227 7.917-3.286-.672Zm-7.518-.267A8.25 8.25 0 1 1 20.25 10.5M8.288 14.212A5.25 5.25 0 1 1 17.25 10.5" /></svg>
+                ), num: "3", title: "Proposition", sub: "Solution sur mesure" },
+                { icon: (
+                  <svg className="h-12 w-12" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+                ), num: "4", title: "Liberté", sub: "Vous décidez sans engagement" },
+              ].map(({ icon, num, title, sub }) => (
+                <div key={num} className="flex flex-col items-center text-center">
+                  <div className={`relative inline-flex items-center justify-center rounded-2xl border p-2 ${theme === "dark" ? "border-gold/20 bg-background-secondary text-gold/70" : "border-[#e2e8f0] bg-white text-[#8a6120]/80 shadow-[0_2px_10px_rgba(0,0,0,0.06)]"}`}>
+                    {icon}
+                    <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-gold text-[10px] font-bold text-[#0b132b]">
+                      {num}
+                    </span>
+                  </div>
+                  <p className={`mt-4 text-base font-bold ${theme === "dark" ? "text-gold" : "text-[#1a2a44]"}`}>{title}</p>
+                  <p className={`mt-1 text-sm ${theme === "dark" ? "text-gold/60" : "text-[#888]"}`}>{sub}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-12 text-center">
+            <button
+              onClick={() => {
+                  const target = document.getElementById('nos-offres');
+                  if (!target) return;
+                  const start = window.scrollY;
+                  const end = target.getBoundingClientRect().top + window.scrollY - 24;
+                  const distance = end - start;
+                  const duration = 1200;
+                  let startTime: number | null = null;
+                  const ease = (t: number) => t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+                  const step = (timestamp: number) => {
+                    if (!startTime) startTime = timestamp;
+                    const progress = Math.min((timestamp - startTime) / duration, 1);
+                    window.scrollTo(0, start + distance * ease(progress));
+                    if (progress < 1) requestAnimationFrame(step);
+                  };
+                  requestAnimationFrame(step);
+                }}
+              className="rounded-xl bg-gold px-8 py-3.5 text-sm font-bold text-[#0b132b] shadow-[0_4px_14px_rgba(201,168,76,0.3)] transition-all hover:bg-gold-light"
+            >
+              Démarrer la collaboration
+            </button>
           </div>
         </div>
       </section>
