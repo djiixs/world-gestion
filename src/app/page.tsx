@@ -1,14 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef, useLayoutEffect } from "react";
 import EntrepreneurOffers from "@/components/EntrepreneurOffers";
 import SubscriptionForm from "@/components/SubscriptionForm";
 import CabinetLeadForm from "@/components/CabinetLeadForm";
 
 import { entrepreneurOffers } from "@/data/entrepreneurOffers";
 import { Offer } from "@/types/offers";
-import cabinetCtaImage from "../../images/d37a60030ad57419d49021b8940fee46.jpg";
+import cabinetCtaImage from "../../images/b24cfbbc38ca74e1e94d313a328bd65e.jpg";
 
 function smoothScrollTo(target: HTMLElement, duration = 600) {
   const start = window.scrollY;
@@ -61,6 +61,32 @@ export default function Home() {
   const [callOffer, setCallOffer] = useState<Offer | null>(null);
   const [callType, setCallType] = useState<"entrepreneur" | "cabinet">("entrepreneur");
   const [theme, setTheme] = useState<"dark" | "light">("dark");
+
+  const heroSectionRef = useRef<HTMLElement>(null);
+
+  const captureHeroHeight = () => {
+    const el = heroSectionRef.current;
+    if (!el) return;
+    el.style.height = el.offsetHeight + "px";
+    el.style.overflow = "hidden";
+    el.dataset.animating = "1";
+  };
+
+  useLayoutEffect(() => {
+    const el = heroSectionRef.current;
+    if (!el || !el.dataset.animating) return;
+    delete el.dataset.animating;
+    const newH = el.scrollHeight;
+    requestAnimationFrame(() => {
+      el.style.transition = "height 0.45s cubic-bezier(0.22,1,0.36,1)";
+      el.style.height = newH + "px";
+      el.addEventListener("transitionend", () => {
+        el.style.height = "";
+        el.style.overflow = "";
+        el.style.transition = "";
+      }, { once: true });
+    });
+  }, [isEntrepreneur]);
 
   const scrollTo = useCallback((el: HTMLElement | null) => {
     if (el) smoothScrollTo(el);
@@ -132,6 +158,7 @@ export default function Home() {
 
       {/* ─── HERO SECTION ─── */}
       <section
+        ref={heroSectionRef}
         className="relative px-6 py-10 md:py-14 overflow-hidden"
         style={{
           background:
@@ -159,42 +186,94 @@ export default function Home() {
           </div>
 
           {/* Title */}
-          <h1 className={`font-title text-xl sm:text-4xl md:text-5xl font-bold leading-tight ${theme === "dark" ? "text-white" : "text-black"}`}>
-            Simplifiez et optimisez votre<br />
-            <span className={theme === "dark" ? "text-white" : "text-black"}>gestion d&apos;entreprise.</span>
-          </h1>
-          <p className={`mt-3 text-sm sm:text-base leading-snug ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`}>
-            Je prends en charge le traitement administratif<br />
-            et votre pré-comptabilité
-          </p>
+          <div key={isEntrepreneur ? 'ent' : 'cab'} className="animate-hero-switch">
+          {isEntrepreneur ? (
+            <>
+              <h1 className={`font-title text-xl sm:text-4xl md:text-5xl font-bold leading-tight ${theme === "dark" ? "text-white" : "text-black"}`}>
+                Simplifiez et optimisez votre<br />
+                <span className={theme === "dark" ? "text-white" : "text-black"}>gestion d&apos;entreprise.</span>
+              </h1>
+              <p className={`mt-6 text-sm sm:text-base leading-relaxed ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`}>
+                Je prends en charge le traitement administratif<br />
+                et votre pré-comptabilité
+              </p>
+            </>
+          ) : (
+            <>
+              <h1 className={`font-title text-xl sm:text-4xl md:text-5xl font-bold leading-tight ${theme === "dark" ? "text-white" : "text-black"}`}>
+                Externalisez votre gestion administrative<br />
+                <span className={theme === "dark" ? "text-gold" : "text-[#8a6120]"}>en toute sérénité.</span>
+              </h1>
+              <p className={`mt-3 text-sm sm:text-base leading-relaxed ${theme === "dark" ? "text-foreground-secondary" : "text-[#555]"}`}>
+                Gagnez du temps, évitez les erreurs et concentrez-vous<br />
+                sur le développement de votre cabinet.
+              </p>
+            </>
+          )}
 
-          {/* Trust bar */}
-          <div className="mt-6 flex flex-wrap gap-3">
-            <div className={`flex items-center gap-2 rounded-xl border px-4 py-2 text-sm font-medium shadow-sm ${theme === "dark" ? "border-gold/20 bg-gold/[0.06] text-gold" : "border-[#d5b86d]/50 bg-[#fdf6e8] text-[#8a6120] shadow-[0_2px_8px_rgba(0,0,0,0.06)]"}`}>
-              <svg className="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" /></svg>
-              <span>Accompagnement humain</span>
+          {/* Trust bar — entrepreneur only */}
+          {isEntrepreneur && (
+            <div className="mt-10 flex flex-wrap gap-3">
+              <div className={`flex items-center gap-2 rounded-xl border px-4 py-2 text-sm font-medium shadow-sm ${theme === "dark" ? "border-gold/20 bg-gold/[0.06] text-gold" : "border-[#d5b86d]/50 bg-[#fdf6e8] text-[#8a6120] shadow-[0_2px_8px_rgba(0,0,0,0.06)]"}`}>
+                <svg className="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" /></svg>
+                <span>Accompagnement humain</span>
+              </div>
+              <div className={`flex items-center gap-2 rounded-xl border px-4 py-2 text-sm font-medium shadow-sm ${theme === "dark" ? "border-gold/20 bg-gold/[0.06] text-gold" : "border-[#d5b86d]/50 bg-[#fdf6e8] text-[#8a6120] shadow-[0_2px_8px_rgba(0,0,0,0.06)]"}`}>
+                <svg className="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M10.343 3.94c.09-.542.56-.94 1.11-.94h1.093c.55 0 1.02.398 1.11.94l.149.894c.07.424.384.764.78.93.398.164.855.142 1.205-.108l.737-.527a1.125 1.125 0 0 1 1.45.12l.773.774c.39.389.44 1.002.12 1.45l-.527.737c-.25.35-.272.806-.107 1.204.165.397.505.71.93.78l.893.15c.543.09.94.559.94 1.109v1.094c0 .55-.397 1.02-.94 1.11l-.894.149c-.424.07-.764.383-.929.78-.165.398-.143.854.107 1.204l.527.738c.32.447.269 1.06-.12 1.45l-.774.773a1.125 1.125 0 0 1-1.449.12l-.738-.527c-.35-.25-.806-.272-1.203-.107-.398.165-.71.505-.781.929l-.149.894c-.09.542-.56.94-1.11.94h-1.094c-.55 0-1.019-.398-1.11-.94l-.148-.894c-.071-.424-.384-.764-.781-.93-.398-.164-.854-.142-1.204.108l-.738.527c-.447.32-1.06.269-1.45-.12l-.773-.774a1.125 1.125 0 0 1-.12-1.45l.527-.737c.25-.35.272-.806.108-1.204-.165-.397-.506-.71-.93-.78l-.894-.15c-.542-.09-.94-.56-.94-1.109v-1.094c0-.55.398-1.02.94-1.11l.894-.149c.424-.07.765-.383.93-.78.165-.398.143-.854-.108-1.204l-.526-.738a1.125 1.125 0 0 1 .12-1.45l.773-.773a1.125 1.125 0 0 1 1.45-.12l.737.527c.35.25.807.272 1.204.107.397-.165.71-.505.78-.929l.15-.894Z" /><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>
+                <span>Flexible et sur-mesure</span>
+              </div>
+              <div className={`flex items-center gap-2 rounded-xl border px-4 py-2 text-sm font-medium shadow-sm ${theme === "dark" ? "border-gold/20 bg-gold/[0.06] text-gold" : "border-[#d5b86d]/50 bg-[#fdf6e8] text-[#8a6120] shadow-[0_2px_8px_rgba(0,0,0,0.06)]"}`}>
+                <svg className="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+                <span>Réponse sous 24h</span>
+              </div>
             </div>
-            <div className={`flex items-center gap-2 rounded-xl border px-4 py-2 text-sm font-medium shadow-sm ${theme === "dark" ? "border-gold/20 bg-gold/[0.06] text-gold" : "border-[#d5b86d]/50 bg-[#fdf6e8] text-[#8a6120] shadow-[0_2px_8px_rgba(0,0,0,0.06)]"}`}>
-              <svg className="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M10.343 3.94c.09-.542.56-.94 1.11-.94h1.093c.55 0 1.02.398 1.11.94l.149.894c.07.424.384.764.78.93.398.164.855.142 1.205-.108l.737-.527a1.125 1.125 0 0 1 1.45.12l.773.774c.39.389.44 1.002.12 1.45l-.527.737c-.25.35-.272.806-.107 1.204.165.397.505.71.93.78l.893.15c.543.09.94.559.94 1.109v1.094c0 .55-.397 1.02-.94 1.11l-.894.149c-.424.07-.764.383-.929.78-.165.398-.143.854.107 1.204l.527.738c.32.447.269 1.06-.12 1.45l-.774.773a1.125 1.125 0 0 1-1.449.12l-.738-.527c-.35-.25-.806-.272-1.203-.107-.398.165-.71.505-.781.929l-.149.894c-.09.542-.56.94-1.11.94h-1.094c-.55 0-1.019-.398-1.11-.94l-.148-.894c-.071-.424-.384-.764-.781-.93-.398-.164-.854-.142-1.204.108l-.738.527c-.447.32-1.06.269-1.45-.12l-.773-.774a1.125 1.125 0 0 1-.12-1.45l.527-.737c.25-.35.272-.806.108-1.204-.165-.397-.506-.71-.93-.78l-.894-.15c-.542-.09-.94-.56-.94-1.109v-1.094c0-.55.398-1.02.94-1.11l.894-.149c.424-.07.765-.383.93-.78.165-.398.143-.854-.108-1.204l-.526-.738a1.125 1.125 0 0 1 .12-1.45l.773-.773a1.125 1.125 0 0 1 1.45-.12l.737.527c.35.25.807.272 1.204.107.397-.165.71-.505.78-.929l.15-.894Z" /><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>
-              <span>Flexible et sur-mesure</span>
+          )}
+
+          {/* CTA cabinet + badges */}
+          {!isEntrepreneur && (
+            <div className="mt-6 flex flex-col gap-6">
+              <div>
+                <button
+                  onClick={() => {
+                    const el = document.getElementById("cabinet-contact");
+                    if (el) smoothScrollTo(el, 1400);
+                  }}
+                  className="inline-flex items-center gap-2 rounded-xl bg-gold px-6 py-3 text-sm font-bold text-[#0b132b] shadow-[0_4px_14px_rgba(201,168,76,0.3)] transition-all hover:bg-gold-light"
+                >
+                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3.75 8.25h16.5M4.5 5.25h15A.75.75 0 0 1 20.25 6v12.75a.75.75 0 0 1-.75.75h-15a.75.75 0 0 1-.75-.75V6a.75.75 0 0 1 .75-.75Z" /></svg>
+                  Réserver un appel découverte
+                </button>
+              </div>
+              <div className="flex gap-10">
+                <div className={`flex flex-col items-center text-center gap-2 ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`}>
+                  <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" strokeWidth={1.6} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" /></svg>
+                  <span className="text-xs font-medium leading-tight">Confidentialité<br />totale</span>
+                </div>
+                <div className={`flex flex-col items-center text-center gap-2 ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`}>
+                  <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" strokeWidth={1.6} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" /></svg>
+                  <span className="text-xs font-medium leading-tight">Données<br />sécurisées</span>
+                </div>
+                <div className={`flex flex-col items-center text-center gap-2 ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`}>
+                  <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" strokeWidth={1.6} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+                  <span className="text-xs font-medium leading-tight">Réactivité<br />sous 24h</span>
+                </div>
+                <div className={`flex flex-col items-center text-center gap-2 ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`}>
+                  <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" strokeWidth={1.6} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" /></svg>
+                  <span className="text-xs font-medium leading-tight">Collaboration<br />simple et fluide</span>
+                </div>
+              </div>
             </div>
-            <div className={`flex items-center gap-2 rounded-xl border px-4 py-2 text-sm font-medium shadow-sm ${theme === "dark" ? "border-gold/20 bg-gold/[0.06] text-gold" : "border-[#d5b86d]/50 bg-[#fdf6e8] text-[#8a6120] shadow-[0_2px_8px_rgba(0,0,0,0.06)]"}`}>
-              <svg className="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
-              <span>Réponse sous 24h</span>
-            </div>
+          )}
+
           </div>
-
-          {/* Subtitle */}
-
-
         </div>
       </section>
 
       {/* ─── TOGGLE + SERVICES + OFFRES ─── */}
-      <section id="offres" className="flex-1 px-6 py-10 md:py-12 bg-background">
+      <section id="offres" className="flex-1 px-6 pt-0 pb-10 md:pb-12 bg-background">
         <div className="mx-auto max-w-7xl">
-          <div className="mx-auto mt-8 max-w-7xl space-y-10">
-            <div className={`reveal-up rounded-[12px] border px-6 py-8 md:px-10 md:py-10 ${theme === "dark" ? "border-[rgba(201,168,76,0.08)] bg-[#0e1731]" : "border-[rgba(26,42,68,0.06)] bg-white shadow-[0_18px_60px_rgba(15,23,42,0.08)]"}`}>
+          <div className="mx-auto mt-0 max-w-7xl space-y-10">
+            <div className={`reveal-up border px-6 py-8 md:px-10 md:py-10 ${theme === "dark" ? "border-[rgba(201,168,76,0.08)] bg-[#0e1731]" : "border-[rgba(26,42,68,0.06)] bg-white shadow-[0_18px_60px_rgba(15,23,42,0.08)]"}`}>
               <h2 className={`font-title text-2xl md:text-3xl font-bold text-center ${theme === "dark" ? "text-gold" : "text-[#1a2a44]"}`}>
                 Vous êtes ?
               </h2>
@@ -204,6 +283,7 @@ export default function Home() {
                 <button
                   type="button"
                   onClick={() => {
+                    captureHeroHeight();
                     setIsEntrepreneur(true);
                     setSelectedOffer(null);
                   }}
@@ -236,6 +316,7 @@ export default function Home() {
                 <button
                   type="button"
                   onClick={() => {
+                    captureHeroHeight();
                     setIsEntrepreneur(false);
                     setSelectedOffer(null);
                   }}
@@ -373,6 +454,10 @@ export default function Home() {
 
                 {/* ─── Premium Services ─── */}
                 <div className="reveal-up">
+                  <h3 className={`font-title text-center text-xl font-bold mb-2 ${theme === "dark" ? "text-white" : "text-[#1a2a44]"}`}>
+                    Ce que je peux prendre en charge
+                  </h3>
+                  <div className="mx-auto mb-8 h-[2px] w-10 rounded-full bg-gold" />
                   <div className="flex flex-wrap justify-center gap-10 md:gap-14">
                     {[
                       {
@@ -430,18 +515,22 @@ export default function Home() {
                     ].map((item) => (
                       <div
                         key={item.title}
-                        className="group w-[45%] md:w-[170px] flex flex-col items-center rounded-[15px] border border-white/10 bg-white/5 px-4 py-7 text-center backdrop-blur-sm transition-all duration-300 hover:-translate-y-2 hover:bg-white/8 hover:border-gold/25 hover:shadow-[0_16px_40px_rgba(0,0,0,0.3)]"
+                        className={`group w-[45%] md:w-[170px] flex flex-col items-center rounded-[15px] border px-4 py-7 text-center backdrop-blur-sm transition-all duration-300 hover:-translate-y-2 hover:border-gold/25 ${
+                          theme === "dark"
+                            ? "border-white/10 bg-white/5 hover:bg-white/8 hover:shadow-[0_16px_40px_rgba(0,0,0,0.3)]"
+                            : "border-[#d5b86d]/30 bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.1)]"
+                        }`}
                       >
                         <div className="mb-4">{item.icon}</div>
-                        <h3 className="text-sm font-semibold leading-snug text-[#f9e498]">{item.title}</h3>
-                        <p className="mt-1.5 text-xs text-white/55">{item.text}</p>
+                        <h3 className={`text-sm font-semibold leading-snug ${theme === "dark" ? "text-[#f9e498]" : "text-[#8a6120]"}`}>{item.title}</h3>
+                        <p className={`mt-1.5 text-xs ${theme === "dark" ? "text-white/55" : "text-[#666]"}`}>{item.text}</p>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                <div className={`reveal-left rounded-[18px] border px-6 py-10 md:px-10 md:py-12 ${theme === "dark" ? "border-white/8 bg-[#142038] text-white" : "border-[rgba(26,42,68,0.08)] bg-[#5f7290] text-white"}`}>
-                  <h2 className={`font-title text-center text-2xl md:text-3xl font-bold ${theme === "dark" ? "text-[#f3dfc0]" : "text-[#1a2a44]"}`}>Les avantages pour votre cabinet</h2>
+                <div className={`reveal-left rounded-[18px] border px-6 py-10 md:px-10 md:py-12 ${theme === "dark" ? "border-white/8 bg-[#142038] text-white" : "border-[rgba(26,42,68,0.08)] bg-[#1a2a44] text-white"}`}>
+                  <h2 className={`font-title text-center text-2xl md:text-3xl font-bold ${theme === "dark" ? "text-[#f3dfc0]" : "text-white"}`}>Les avantages pour votre cabinet</h2>
 
                   <div className="mt-12 grid gap-0 md:grid-cols-5 md:divide-x md:divide-white/10">
                     {[
@@ -574,32 +663,22 @@ export default function Home() {
                   </div>
                 </section>
 
-                <div className={`reveal-left mx-auto flex max-w-5xl flex-col overflow-hidden rounded-[15px] border md:flex-row ${theme === "dark" ? "border-gold/15 bg-white/[0.03] shadow-[0_12px_36px_rgba(0,0,0,0.28)]" : "border-[#e6dcc3] bg-background-tertiary shadow-[0_8px_24px_rgba(15,23,42,0.08)]"}`}>
+                <div id="cabinet-contact" className={`reveal-left mx-auto flex max-w-5xl flex-col overflow-hidden rounded-[15px] border md:flex-row ${theme === "dark" ? "border-gold/15 bg-white/[0.03] shadow-[0_12px_36px_rgba(0,0,0,0.28)]" : "border-[#e6dcc3] bg-background-tertiary shadow-[0_8px_24px_rgba(15,23,42,0.08)]"}`}>
                   <div className="flex-1 px-8 py-10 text-left">
                     <h2 className={`font-title text-2xl md:text-3xl font-bold ${theme === "dark" ? "text-[#f3dfc0]" : "text-[#1a2a44]"}`}>Besoin d'un renfort fiable pour votre cabinet ?</h2>
                     <p className={`mt-3 text-base font-medium ${theme === "dark" ? "text-foreground" : "text-[#8a6120]"}`}>Discutons de vos besoins.</p>
                     <p className={`mt-3 text-sm leading-relaxed ${theme === "dark" ? "text-foreground-secondary" : "text-foreground-secondary"}`}>Je vous propose une solution sur mesure, simple, flexible et efficace.</p>
                     <button
                       onClick={() => { setCallOffer(null); setCallType("cabinet"); setShowCallModal(true); }}
-                      className={`mt-7 inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-bold transition-all duration-200 ${theme === "dark" ? "border-gold/30 bg-gold text-[#0b132b] shadow-[0_6px_14px_rgba(201,168,76,0.10)] hover:bg-gold-light hover:shadow-[0_8px_18px_rgba(201,168,76,0.14)]" : "border-[#d5b86d] bg-gold text-[#0b132b] shadow-[0_4px_12px_rgba(201,168,76,0.09)] hover:bg-[#d7b764] hover:shadow-[0_6px_14px_rgba(201,168,76,0.12)]"}`}
+                      className={`mt-7 inline-flex items-center gap-2 rounded-[10px] border px-5 py-3 text-sm font-bold transition-all duration-200 ${theme === "dark" ? "border-gold bg-transparent text-gold hover:bg-gold/10" : "border-[#8a6120] bg-transparent text-[#8a6120] hover:bg-[#8a6120]/8"}`}
                     >
-                      <span className={`grid h-6 w-6 place-items-center rounded-full ${theme === "dark" ? "bg-[#0b132b]/10" : "bg-[#0b132b]/8"}`}>
-                        <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3.75 8.25h16.5M4.5 5.25h15A.75.75 0 0 1 20.25 6v12.75a.75.75 0 0 1-.75.75h-15a.75.75 0 0 1-.75-.75V6a.75.75 0 0 1 .75-.75Z" />
-                        </svg>
-                      </span>
-                      <span>Je réserve un appel gratuit</span>
-                      <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3.75 8.25h16.5M4.5 5.25h15A.75.75 0 0 1 20.25 6v12.75a.75.75 0 0 1-.75.75h-15a.75.75 0 0 1-.75-.75V6a.75.75 0 0 1 .75-.75Z" />
                       </svg>
+                      <span>Je réserve un appel</span>
                     </button>
-                    <p className={`mt-5 inline-flex w-fit items-center gap-2 rounded-full border px-3 py-1.5 text-sm ${theme === "dark" ? "border-white/10 bg-white/[0.04] text-foreground-secondary" : "border-[#d9e1ec] bg-white text-foreground-secondary"}`}>
-                      <span className={`grid h-6 w-6 place-items-center rounded-full ${theme === "dark" ? "bg-gold/12 text-gold" : "bg-gold/15 text-[#8a6120]"}`}>
-                        <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6l4 2.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                        </svg>
-                      </span>
-                      <span className="font-medium">Réponse sous 24h garantie</span>
+                    <p className={`mt-4 text-sm font-medium ${theme === "dark" ? "text-foreground-muted" : "text-[#888]"}`}>
+                      Réponse sous 24h garantie
                     </p>
                   </div>
 
@@ -638,29 +717,14 @@ export default function Home() {
 
               </>
             ) : (
-              <div className="text-center space-y-6">
-                {/* Ligne séparatrice dorée */}
-                <div className="relative">
-                  <div className="h-px bg-gradient-to-r from-transparent via-gold to-transparent opacity-70" />
-                  <div className="w-3 h-3 mx-auto -mt-1.5 rounded-full bg-gold shadow-[0_0_20px_rgba(201,168,76,0.7)]" />
-                </div>
-
-                <h2 className={`font-title text-2xl md:text-3xl font-bold uppercase ${theme === "dark" ? "text-[#f3dfc0]" : "text-[#8a6120]"}`}>
-                  Prêt à optimiser votre cabinet ?
-                </h2>
-                <button
-                  onClick={() => setShowPartnershipModal(true)}
-                  className="btn-gold inline-block text-sm md:text-base"
-                >
-                  Demander un partenariat
-                </button>
-              </div>
+              <div />
             )}
           </div>
         </div>
       </section>
 
       {/* ─── Comment ça se passe ─── */}
+      {isEntrepreneur && (
       <section className="px-6 py-10 md:py-12 bg-background">
         <div className="mx-auto max-w-5xl">
           <h2 className={`font-title text-center text-2xl font-bold md:text-3xl ${theme === "dark" ? "text-gold" : "text-[#1a2a44]"}`}>
@@ -682,7 +746,7 @@ export default function Home() {
                 ), num: "2", title: "Échange", sub: "Analyse de vos besoins" },
                 { icon: (
                   <svg className="h-12 w-12" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M15.042 21.672 13.684 16.6m0 0-2.51 2.225.569-9.47 5.227 7.917-3.286-.672Zm-7.518-.267A8.25 8.25 0 1 1 20.25 10.5M8.288 14.212A5.25 5.25 0 1 1 17.25 10.5" /></svg>
-                ), num: "3", title: "Proposition", sub: "Solution sur mesure" },
+                ), num: "3", title: "Proposition", sub: "Solution adaptée" },
                 { icon: (
                   <svg className="h-12 w-12" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
                 ), num: "4", title: "Liberté", sub: "Vous décidez sans engagement" },
@@ -694,8 +758,8 @@ export default function Home() {
                       {num}
                     </span>
                   </div>
-                  <p className={`mt-4 text-base font-bold ${theme === "dark" ? "text-gold" : "text-[#1a2a44]"}`}>{title}</p>
-                  <p className={`mt-1 text-sm ${theme === "dark" ? "text-gold/60" : "text-[#888]"}`}>{sub}</p>
+                  <p className={`mt-4 text-base font-bold ${theme === "dark" ? "text-white" : "text-[#1a2a44]"}`}>{title}</p>
+                  <p className={`mt-1 text-sm ${theme === "dark" ? "text-white/60" : "text-[#888]"}`}>{sub}</p>
                 </div>
               ))}
             </div>
@@ -720,13 +784,14 @@ export default function Home() {
                   };
                   requestAnimationFrame(step);
                 }}
-              className="rounded-xl bg-gold px-8 py-3.5 text-sm font-bold text-[#0b132b] shadow-[0_4px_14px_rgba(201,168,76,0.3)] transition-all hover:bg-gold-light"
+              className={`rounded-xl bg-gold px-8 py-3.5 text-sm font-bold shadow-[0_4px_14px_rgba(201,168,76,0.3)] transition-all hover:bg-gold-light ${theme === "dark" ? "text-white" : "text-[#0b132b]"}`}
             >
               Démarrer la collaboration
             </button>
           </div>
         </div>
       </section>
+      )}
 
       {/* ─── Footer minimal ─── */}
       <footer className="border-t border-border bg-background-secondary px-6 py-6 text-center text-xs text-foreground-muted">

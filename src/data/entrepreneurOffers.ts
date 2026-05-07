@@ -4,7 +4,7 @@ export const entrepreneurOffers: Offer[] = [
   {
     id: "ent-essentielle",
     title: "Essentielle",
-    description: "Idéale pour démarrer et structurer votre administratif",
+    description: "Pour les entrepreneurs qui veulent déléguer les bases efficacement",
     features: [
       "Gestion des emails et courriers",
       "Organisation et classement des documents",
@@ -37,7 +37,7 @@ export const entrepreneurOffers: Offer[] = [
   {
     id: "ent-premium",
     title: "Premium",
-    description: "Pour une gestion complète et sans stress",
+    description: "Idéal pour déléguer en toute confiance",
     features: [
       "Devis & facturation",
       "Relance clients",

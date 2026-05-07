@@ -114,8 +114,8 @@ function OfferCard({
           {offer.badge}
         </span>
       )}
-      <h3 className="text-xl font-extrabold tracking-tight text-gold drop-shadow-[0_0_8px_rgba(201,168,76,0.35)]">{offer.title}</h3>
-      <div className="mt-1 h-[2px] w-8 rounded-full bg-gold/50" />
+      <h3 className="text-xl font-extrabold tracking-tight text-gold drop-shadow-[0_0_8px_rgba(201,168,76,0.35)] text-center">{offer.title}</h3>
+      <div className="mt-1 h-[2px] w-8 rounded-full bg-gold/50 mx-auto" />
       <p className={`mt-1 text-xs font-medium leading-relaxed ${theme === "dark" ? "text-gold/80" : "text-[#8a6120]"}`}>
         {offer.description}
       </p>
@@ -140,18 +140,18 @@ function OfferCard({
         ))}
       </ul>
       {offer.id === "ent-essentielle" && (
-        <p className="mt-3 text-xs text-foreground-secondary leading-relaxed">
+        <p className={`mt-6 text-xs font-medium leading-relaxed ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`}>
           Idéal pour démarrer sereinement
         </p>
       )}
       {offer.id === "ent-confort" && (
-        <p className="mt-3 text-xs text-foreground-secondary leading-relaxed">
-          Pour une gestion administrative complète et sereine
+        <p className={`mt-6 text-xs font-medium leading-relaxed ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`}>
+          Idéal pour gagner en efficacité
         </p>
       )}
       {offer.id === "ent-premium" && (
-        <p className="mt-3 text-xs text-foreground-secondary leading-relaxed">
-          L&apos;accompagnement complet pour vous libérer l&apos;esprit
+        <p className={`mt-6 text-xs font-medium leading-relaxed ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`}>
+          Idéal pour déléguer en toute confiance
         </p>
       )}
       <button
@@ -165,7 +165,7 @@ function OfferCard({
               : "border border-[#8a6120]/45 text-[#8a6120] hover:bg-[#8a6120] hover:text-white"
         )}
       >
-        Je réserve un appel gratuit
+        Je réserve un appel
       </button>
     </div>
   );
