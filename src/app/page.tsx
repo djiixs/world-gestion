@@ -224,9 +224,9 @@ export default function Home() {
                     </svg>
                   </div>
                   <div>
-                    <p className={`text-base font-bold ${theme === "dark" ? "text-foreground" : "text-[#1a2a44]"}`}>Entrepreneur / independant</p>
+                    <p className={`text-base font-bold ${theme === "dark" ? "text-foreground" : "text-[#1a2a44]"}`}>Entrepreneur / indépendant</p>
                     <p className={`mt-1 text-sm ${theme === "dark" ? "text-foreground-muted" : "text-[#666]"}`}>
-                      Vous gerez votre activite et manquez de temps.
+                      Vous gérez votre activité et manquez de temps.
                     </p>
                   </div>
                 </button>
@@ -258,14 +258,14 @@ export default function Home() {
                   <div>
                     <p className={`text-base font-bold ${theme === "dark" ? "text-foreground" : "text-[#1a2a44]"}`}>Cabinet comptable</p>
                     <p className={`mt-1 text-sm ${theme === "dark" ? "text-foreground-muted" : "text-[#666]"}`}>
-                      Vous cherchez un support fiable et reactif.
+                      Vous cherchez un support fiable et réactif.
                     </p>
                   </div>
                 </button>
               </div>
 
               <p className={`mx-auto mt-8 max-w-3xl text-center text-base font-semibold ${theme === "dark" ? "text-foreground" : "text-[#1a2a44]"}`}>
-                Vous cherchez une solution fiable pour deleguer votre gestion sans perdre le controle.
+                Vous cherchez une solution fiable pour déléguer votre gestion sans perdre le contrôle.
               </p>
             </div>
 
@@ -281,22 +281,22 @@ export default function Home() {
                     {[
                       {
                         title: "Moins de charge mentale",
-                        description: "Je m'occupe des taches chronophages.",
+                        description: "Je m'occupe des tâches chronophages.",
                         icon: <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6l3.75 3.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />,
                       },
                       {
                         title: "Un gain de temps concret",
-                        description: "Vous restez concentre sur votre coeur de metier.",
+                        description: "Vous restez concentré sur votre cœur de métier.",
                         icon: <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.5 9.75 6.75l4.5 4.5L21 4.5M16.5 4.5H21V9" />,
                       },
                       {
                         title: "Une meilleure organisation",
-                        description: "Vos documents sont classes, a jour et accessibles.",
+                        description: "Vos documents sont classés, à jour et accessibles.",
                         icon: <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 7.5h6.75m-6.75 4.5h6.75m-6.75 4.5h6.75m3-9h9m-9 4.5h9m-9 4.5h9" />,
                       },
                       {
                         title: "Une gestion plus sure",
-                        description: "Moins d'erreurs, plus de serenite.",
+                        description: "Moins d'erreurs, plus de sérénité.",
                         icon: <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />,
                       },
                     ].map((item, index) => (
@@ -334,13 +334,13 @@ export default function Home() {
                         ),
                       },
                       {
-                        title: "Pre-comptabilite",
+                        title: "Pré-comptabilité",
                         description: "Saisie, suivi et organisation de vos documents comptables pour une comptabilité toujours à jour.",
                         icon: <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 15.75V18m-7.5-6.75h.008v.008H8.25v-.008Zm0 2.25h.008v.008H8.25V13.5Zm0 2.25h.008v.008H8.25v-.008Zm0 2.25h.008v.008H8.25V18Zm2.498-6.75h.007v.008h-.007v-.008Zm0 2.25h.007v.008h-.007V13.5Zm0 2.25h.007v.008h-.007v-.008Zm0 2.25h.007v.008h-.007V18Zm2.504-6.75h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V13.5Zm0 2.25h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V18Zm2.498-6.75h.008v.008h-.008v-.008ZM15.75 13.5h.008v.008h-.008V13.5ZM6 6.75A.75.75 0 0 1 6.75 6h10.5a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-.75.75H6.75A.75.75 0 0 1 6 8.25v-1.5Z" />,
                       },
                       {
                         title: "Accompagnement sur mesure",
-                        description: "Chaque entreprise est differente. J'adapte mes services a vos besoins et a votre organisation.",
+                        description: "Chaque entreprise est différente. J'adapte mes services à vos besoins et à votre organisation.",
                         icon: (
                           <>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
@@ -364,7 +364,7 @@ export default function Home() {
                   </div>
 
                   <p className={`mt-8 text-center text-sm font-medium ${theme === "dark" ? "text-foreground-secondary" : "text-[#333]"}`}>
-                    Une solution flexible, evolutive et personnalisee.
+                    Une solution flexible, évolutive et personnalisée.
                   </p>
                 </div>
               </>
@@ -446,8 +446,8 @@ export default function Home() {
                   <div className="mt-12 grid gap-0 md:grid-cols-5 md:divide-x md:divide-white/10">
                     {[
                       {
-                        title: "Gain de productivite",
-                        text: "Vous liberez du temps pour le conseil.",
+                        title: "Gain de productivité",
+                        text: "Vous libérez du temps pour le conseil.",
                         icon: (
                           <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M3 17.25V9.75m6 7.5V6.75m6 10.5V12m6 5.25V3.75" />
@@ -455,8 +455,8 @@ export default function Home() {
                         ),
                       },
                       {
-                        title: "Flexibilite totale",
-                        text: "Adaptez le volume selon vos pics d'activite.",
+                        title: "Flexibilité totale",
+                        text: "Adaptez le volume selon vos pics d'activité.",
                         icon: (
                           <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 7.5h9m0 0-3-3m3 3-3 3M16.5 16.5h-9m0 0 3-3m-3 3 3 3" />
@@ -464,7 +464,7 @@ export default function Home() {
                         ),
                       },
                       {
-                        title: "Maitrise des couts",
+                        title: "Maîtrise des coûts",
                         text: "Pas de recrutement, pas de charges sociales.",
                         icon: (
                           <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
@@ -474,8 +474,8 @@ export default function Home() {
                         ),
                       },
                       {
-                        title: "Reactivite",
-                        text: "Je m'engage a repondre rapidement.",
+                        title: "Réactivité",
+                        text: "Je m'engage à répondre rapidement.",
                         icon: (
                           <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6l4 2.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
@@ -483,8 +483,8 @@ export default function Home() {
                         ),
                       },
                       {
-                        title: "Confidentialite",
-                        text: "Donnees traitees avec rigueur et discretion.",
+                        title: "Confidentialité",
+                        text: "Données traitées avec rigueur et discrétion.",
                         icon: (
                           <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
@@ -537,8 +537,8 @@ export default function Home() {
                       },
                       {
                         number: "3",
-                        title: "Demarrage rapide",
-                        text: "Je m'integre a vos process convenus.",
+                        title: "Démarrage rapide",
+                        text: "Je m'intègre à vos process convenus.",
                         icon: (
                           <svg className="h-9 w-9" fill="none" viewBox="0 0 24 24" strokeWidth={1.6} stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12a7.5 7.5 0 0 1 15 0m-15 0a7.5 7.5 0 0 0 15 0m-15 0H3m16.5 0H21" />
@@ -549,7 +549,7 @@ export default function Home() {
                       {
                         number: "4",
                         title: "Suivi et ajustement",
-                        text: "J'assure un suivi regulier pour optimiser notre collaboration.",
+                        text: "J'assure un suivi régulier pour optimiser notre collaboration.",
                         icon: (
                           <svg className="h-9 w-9" fill="none" viewBox="0 0 24 24" strokeWidth={1.6} stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75" />
@@ -599,7 +599,7 @@ export default function Home() {
                           <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6l4 2.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                         </svg>
                       </span>
-                      <span className="font-medium">Reponse sous 24h garantie</span>
+                      <span className="font-medium">Réponse sous 24h garantie</span>
                     </p>
                   </div>
 

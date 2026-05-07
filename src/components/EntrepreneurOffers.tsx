@@ -34,7 +34,7 @@ export default function EntrepreneurOffers({ offers, onSelect, onReserveCall, th
           <span className={`grid h-5 w-5 place-items-center rounded-full text-[11px] ${theme === "dark" ? "bg-gold/10 text-gold" : "bg-[#ff7f50]/10 text-[#ff7f50]"}`}>
             i
           </span>
-          <span>Chaque offre inclus les service de l&apos;offre precedente.</span>
+          <span>Chaque offre inclut les services de l&apos;offre précédente.</span>
         </span>
       </p>
 
@@ -49,10 +49,10 @@ export default function EntrepreneurOffers({ offers, onSelect, onReserveCall, th
 
               <ul className="mt-8 space-y-4">
                 {[
-                  "Un interlocuteur unique et dedie",
+                  "Un interlocuteur unique et dédié",
                   "Une relation humaine et de confiance",
-                  "Une grande reactivite",
-                  "Une adaptation a votre activite",
+                  "Une grande réactivité",
+                  "Une adaptation à votre activité",
                 ].map((item) => (
                   <li key={item} className={`flex items-center justify-center gap-4 text-base md:justify-start md:text-[1.05rem] ${theme === "dark" ? "text-foreground" : "text-[#333]"}`}>
                     <span className={`flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full border text-xs ${theme === "dark" ? "border-gold/50 text-gold" : "border-[#ff7f50]/70 text-[#ff7f50]"}`}>

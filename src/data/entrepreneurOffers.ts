@@ -37,7 +37,7 @@ export const entrepreneurOffers: Offer[] = [
   {
     id: "ent-premium",
     title: "Premium",
-    description: "Pour une gestion compléte et sans stress",
+    description: "Pour une gestion complète et sans stress",
     features: [
       "Devis & facturation",
       "Relance clients",
