@@ -183,7 +183,7 @@ export default function Home() {
           <div className="mx-auto mt-8 max-w-7xl space-y-10">
             <div className={`reveal-up rounded-[12px] border px-6 py-8 md:px-10 md:py-10 ${theme === "dark" ? "border-[rgba(201,168,76,0.08)] bg-[#0e1731]" : "border-[rgba(26,42,68,0.06)] bg-white shadow-[0_18px_60px_rgba(15,23,42,0.08)]"}`}>
               <h2 className={`font-title text-2xl md:text-3xl font-bold text-center ${theme === "dark" ? "text-gold" : "text-[#1a2a44]"}`}>
-                Vous êtes :
+                Vous êtes ?
               </h2>
               <div className="mx-auto mt-3 h-[2px] w-12 rounded-full bg-gold" />
 
