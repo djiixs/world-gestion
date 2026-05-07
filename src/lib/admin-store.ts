@@ -6,6 +6,18 @@ export type LeadType = "entrepreneur" | "cabinet";
 export type LeadState = "inbox" | "pinned" | "draft" | "deleted";
 export type PurchaseStatus = "initiated" | "succeeded" | "failed";
 
+export interface BookingRecord {
+  id: string;
+  createdAt: string;
+  type: LeadType;
+  offerTitle: string;
+  offerPrice?: string;
+  date: string;       // ISO date string of the chosen day
+  slot: string;       // e.g. "14h00"
+  name: string;
+  email: string;
+}
+
 export interface LeadRecord {
   id: string;
   createdAt: string;
@@ -41,6 +53,7 @@ export interface PurchaseRecord {
 interface AdminStore {
   leads: LeadRecord[];
   purchases: PurchaseRecord[];
+  bookings: BookingRecord[];
 }
 
 const PROJECT_STORE_FILE_PATH = path.join(process.cwd(), "data", "admin-store.json");
@@ -51,13 +64,14 @@ const STORE_FILE_PATH = process.env.VERCEL
 let writeQueue = Promise.resolve();
 
 function createInitialStore(): AdminStore {
-  return { leads: [], purchases: [] };
+  return { leads: [], purchases: [], bookings: [] };
 }
 
 function normalizeStore(parsed: Partial<AdminStore>): AdminStore {
   return {
     leads: Array.isArray(parsed.leads) ? parsed.leads : [],
     purchases: Array.isArray(parsed.purchases) ? parsed.purchases : [],
+    bookings: Array.isArray(parsed.bookings) ? parsed.bookings : [],
   };
 }
 
@@ -164,6 +178,20 @@ export async function updatePurchaseStatusByPaymentIntent(paymentIntentId: strin
   });
 }
 
+export async function addBooking(input: Omit<BookingRecord, "id" | "createdAt">) {
+  return enqueueWrite(async () => {
+    const store = await readStore();
+    const record: BookingRecord = {
+      id: createId("booking"),
+      createdAt: new Date().toISOString(),
+      ...input,
+    };
+    store.bookings.unshift(record);
+    await writeStore(store);
+    return record;
+  });
+}
+
 export async function getAdminDashboardData() {
   const store = await readStore();
   const leads = store.leads.map((lead) => normalizeLead(lead));
@@ -171,12 +199,14 @@ export async function getAdminDashboardData() {
   return {
     leads,
     purchases: store.purchases,
+    bookings: store.bookings ?? [],
     stats: {
       totalLeads: leads.filter((lead) => lead.state !== "deleted").length,
       totalPinnedLeads: leads.filter((lead) => lead.state === "pinned").length,
       totalDraftLeads: leads.filter((lead) => lead.state === "draft").length,
       totalPurchases: store.purchases.length,
       succeededPurchases: store.purchases.filter((item) => item.status === "succeeded").length,
+      totalBookings: (store.bookings ?? []).length,
     },
   };
 }

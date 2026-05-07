@@ -14,7 +14,7 @@ export default async function AdminPage() {
     redirect("/admin/login");
   }
 
-  const { leads, stats } = await getAdminDashboardData();
+  const { leads, stats, bookings } = await getAdminDashboardData();
   return (
     <main className="min-h-screen bg-background px-4 py-8 sm:px-6 sm:py-10">
       <div className="mx-auto w-full max-w-6xl space-y-6">
@@ -52,6 +52,11 @@ export default async function AdminPage() {
                 <p className="mt-2 text-xs text-foreground-secondary">Demandes sorties du flux principal</p>
               </div>
               <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 md:col-span-3 xl:col-span-1">
+                <p className="text-xs uppercase tracking-[0.22em] text-foreground-muted">Réservations d&apos;appel</p>
+                <p className="mt-3 text-3xl font-bold text-gold">{stats.totalBookings}</p>
+                <p className="mt-2 text-xs text-foreground-secondary">Créneaux d&apos;appel réservés au total</p>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 md:col-span-3 xl:col-span-1">
                 <p className="text-xs uppercase tracking-[0.22em] text-foreground-muted">Conversions</p>
                 <p className="mt-3 text-3xl font-bold text-white">{stats.succeededPurchases}/{stats.totalPurchases}</p>
                 <p className="mt-2 text-xs text-foreground-secondary">Paiements confirms sur la plateforme</p>
@@ -60,7 +65,7 @@ export default async function AdminPage() {
           </div>
         </section>
 
-        <AdminLeadsSections leads={leads} />
+        <AdminLeadsSections leads={leads} bookings={bookings} />
 
         <div className="flex items-center justify-center gap-4 pt-1 text-foreground-muted">
           <a href="https://www.facebook.com/share/1AtxpsRjpU/?mibextid=wwXIfr" target="_blank" rel="noopener" aria-label="Facebook" className="hover:text-gold transition-colors duration-200">

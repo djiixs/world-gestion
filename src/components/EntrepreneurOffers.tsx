@@ -8,10 +8,11 @@ import entrepreneurPortrait from "../../images/43b615a70c7a737beaa28ccedf09e36c.
 interface Props {
   offers: Offer[];
   onSelect: (offer: Offer) => void;
+  onReserveCall?: (offer: Offer) => void;
   theme: "dark" | "light";
 }
 
-export default function EntrepreneurOffers({ offers, onSelect, theme }: Props) {
+export default function EntrepreneurOffers({ offers, onSelect, onReserveCall, theme }: Props) {
   // Separate subscription offers from one-time offers
   const subscriptionOffers = offers.filter((o) => o.priceUnit !== "/heure");
   const hourlyOffers = offers.filter((o) => o.priceUnit === "/heure");
@@ -23,7 +24,7 @@ export default function EntrepreneurOffers({ offers, onSelect, theme }: Props) {
       <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-3 pt-3 -mx-6 px-6 md:mx-0 md:px-0 md:grid md:grid-cols-3 md:overflow-visible md:pb-0 md:pt-0 md:snap-none">
         {subscriptionOffers.map((offer) => (
           <div key={offer.id} className="min-w-[75vw] sm:min-w-[55vw] md:min-w-0 snap-center">
-            <OfferCard offer={offer} onSelect={onSelect} theme={theme} />
+            <OfferCard offer={offer} onSelect={onSelect} onReserveCall={onReserveCall} theme={theme} />
           </div>
         ))}
       </div>
@@ -90,10 +91,12 @@ export default function EntrepreneurOffers({ offers, onSelect, theme }: Props) {
 function OfferCard({
   offer,
   onSelect,
+  onReserveCall,
   theme,
 }: {
   offer: Offer;
   onSelect: (offer: Offer) => void;
+  onReserveCall?: (offer: Offer) => void;
   theme: "dark" | "light";
 }) {
   return (
@@ -111,7 +114,8 @@ function OfferCard({
           {offer.badge}
         </span>
       )}
-      <h3 className={`text-base font-bold tracking-tight ${theme === "dark" ? "text-foreground" : "text-[#8a6120]"}`}>{offer.title}</h3>
+      <h3 className="text-lg font-extrabold tracking-tight text-gold drop-shadow-[0_0_8px_rgba(201,168,76,0.35)]">{offer.title}</h3>
+      <div className="mt-1 h-[2px] w-8 rounded-full bg-gold/50" />
       <p className="mt-1 text-xs text-foreground-secondary leading-relaxed">
         {offer.description}
       </p>
@@ -136,7 +140,7 @@ function OfferCard({
         ))}
       </ul>
       <button
-        onClick={() => onSelect(offer)}
+        onClick={() => onReserveCall ? onReserveCall(offer) : onSelect(offer)}
         className={cn(
           "mt-4 w-full rounded-lg py-2.5 text-xs font-semibold active:scale-[0.98] transition-all duration-200",
           offer.popular
@@ -146,7 +150,7 @@ function OfferCard({
               : "border border-[#8a6120]/45 text-[#8a6120] hover:bg-[#8a6120] hover:text-white"
         )}
       >
-        {offer.cta || "Choisir cette offre"}
+        Je réserve un appel gratuit
       </button>
     </div>
   );

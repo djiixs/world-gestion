@@ -57,6 +57,9 @@ export default function Home() {
   const [isEntrepreneur, setIsEntrepreneur] = useState(true);
   const [selectedOffer, setSelectedOffer] = useState<Offer | null>(null);
   const [showPartnershipModal, setShowPartnershipModal] = useState(false);
+  const [showCallModal, setShowCallModal] = useState(false);
+  const [callOffer, setCallOffer] = useState<Offer | null>(null);
+  const [callType, setCallType] = useState<"entrepreneur" | "cabinet">("entrepreneur");
   const [theme, setTheme] = useState<"dark" | "light">("dark");
 
   const scrollTo = useCallback((el: HTMLElement | null) => {
@@ -354,8 +357,78 @@ export default function Home() {
               </>
             ) : (
               <div className="space-y-14">
+
+                {/* ─── Premium Services ─── */}
+                <div className="reveal-up">
+                  <div className="flex flex-wrap justify-center gap-10 md:gap-14">
+                    {[
+                      {
+                        title: "Saisie comptable",
+                        text: "Traitement structuré et précis",
+                        icon: (
+                          <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="url(#gold-grad)">
+                            <defs>
+                              <linearGradient id="gold-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stopColor="#d4af37" />
+                                <stop offset="50%" stopColor="#f9e498" />
+                                <stop offset="100%" stopColor="#b8860b" />
+                              </linearGradient>
+                            </defs>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                          </svg>
+                        ),
+                      },
+                      {
+                        title: "Lettrage",
+                        text: "Suivi clients / fournisseurs",
+                        icon: (
+                          <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="url(#gold-grad)">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+                          </svg>
+                        ),
+                      },
+                      {
+                        title: "Rapprochements bancaires",
+                        text: "Fiabilité et contrôle",
+                        icon: (
+                          <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="url(#gold-grad)">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0 0 12 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75Z" />
+                          </svg>
+                        ),
+                      },
+                      {
+                        title: "Préparation TVA",
+                        text: "Éléments prêts à déclarer",
+                        icon: (
+                          <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="url(#gold-grad)">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25ZM6.75 12h.008v.008H6.75V12Zm0 3h.008v.008H6.75V15Zm0 3h.008v.008H6.75V18Z" />
+                          </svg>
+                        ),
+                      },
+                      {
+                        title: "Organisation des dossiers",
+                        text: "Classement optimisé",
+                        icon: (
+                          <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="url(#gold-grad)">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12.75V12A2.25 2.25 0 0 1 4.5 9.75h15A2.25 2.25 0 0 1 21.75 12v.75m-8.69-6.44-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z" />
+                          </svg>
+                        ),
+                      },
+                    ].map((item) => (
+                      <div
+                        key={item.title}
+                        className="group w-[45%] md:w-[170px] flex flex-col items-center rounded-[15px] border border-white/10 bg-white/5 px-4 py-7 text-center backdrop-blur-sm transition-all duration-300 hover:-translate-y-2 hover:bg-white/8 hover:border-gold/25 hover:shadow-[0_16px_40px_rgba(0,0,0,0.3)]"
+                      >
+                        <div className="mb-4">{item.icon}</div>
+                        <h3 className="text-sm font-semibold leading-snug text-[#f9e498]">{item.title}</h3>
+                        <p className="mt-1.5 text-xs text-white/55">{item.text}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
                 <div className={`reveal-left rounded-[18px] border px-6 py-10 md:px-10 md:py-12 ${theme === "dark" ? "border-white/8 bg-[#142038] text-white" : "border-[rgba(26,42,68,0.08)] bg-[#5f7290] text-white"}`}>
-                  <h2 className="font-title text-center text-2xl md:text-3xl font-bold text-gold">Les avantages pour votre cabinet</h2>
+                  <h2 className={`font-title text-center text-2xl md:text-3xl font-bold ${theme === "dark" ? "text-[#f3dfc0]" : "text-[#1a2a44]"}`}>Les avantages pour votre cabinet</h2>
 
                   <div className="mt-12 grid gap-0 md:grid-cols-5 md:divide-x md:divide-white/10">
                     {[
@@ -490,11 +563,11 @@ export default function Home() {
 
                 <div className={`reveal-left mx-auto flex max-w-5xl flex-col overflow-hidden rounded-[15px] border md:flex-row ${theme === "dark" ? "border-gold/15 bg-white/[0.03] shadow-[0_12px_36px_rgba(0,0,0,0.28)]" : "border-[#e6dcc3] bg-background-tertiary shadow-[0_8px_24px_rgba(15,23,42,0.08)]"}`}>
                   <div className="flex-1 px-8 py-10 text-left">
-                    <h2 className={`font-title text-2xl md:text-3xl font-bold ${theme === "dark" ? "text-gold" : "text-[#1a2a44]"}`}>Besoin d'un renfort fiable pour votre cabinet ?</h2>
+                    <h2 className={`font-title text-2xl md:text-3xl font-bold ${theme === "dark" ? "text-[#f3dfc0]" : "text-[#1a2a44]"}`}>Besoin d'un renfort fiable pour votre cabinet ?</h2>
                     <p className={`mt-3 text-base font-medium ${theme === "dark" ? "text-foreground" : "text-[#8a6120]"}`}>Discutons de vos besoins.</p>
                     <p className={`mt-3 text-sm leading-relaxed ${theme === "dark" ? "text-foreground-secondary" : "text-foreground-secondary"}`}>Je vous propose une solution sur mesure, simple, flexible et efficace.</p>
                     <button
-                      onClick={() => setShowPartnershipModal(true)}
+                      onClick={() => { setCallOffer(null); setCallType("cabinet"); setShowCallModal(true); }}
                       className={`mt-7 inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-bold transition-all duration-200 ${theme === "dark" ? "border-gold/30 bg-gold text-[#0b132b] shadow-[0_6px_14px_rgba(201,168,76,0.10)] hover:bg-gold-light hover:shadow-[0_8px_18px_rgba(201,168,76,0.14)]" : "border-[#d5b86d] bg-gold text-[#0b132b] shadow-[0_4px_12px_rgba(201,168,76,0.09)] hover:bg-[#d7b764] hover:shadow-[0_6px_14px_rgba(201,168,76,0.12)]"}`}
                     >
                       <span className={`grid h-6 w-6 place-items-center rounded-full ${theme === "dark" ? "bg-[#0b132b]/10" : "bg-[#0b132b]/8"}`}>
@@ -502,7 +575,7 @@ export default function Home() {
                           <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3.75 8.25h16.5M4.5 5.25h15A.75.75 0 0 1 20.25 6v12.75a.75.75 0 0 1-.75.75h-15a.75.75 0 0 1-.75-.75V6a.75.75 0 0 1 .75-.75Z" />
                         </svg>
                       </span>
-                      <span>Echanger sur vos besoins</span>
+                      <span>Je réserve un appel gratuit</span>
                       <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
                       </svg>
@@ -545,6 +618,7 @@ export default function Home() {
                   <EntrepreneurOffers
                     offers={entrepreneurOffers}
                     onSelect={handleOfferSelect}
+                    onReserveCall={(offer) => { setCallOffer(offer); setCallType("entrepreneur"); setShowCallModal(true); }}
                     theme={theme}
                   />
                 </div>
@@ -606,6 +680,11 @@ export default function Home() {
       {/* ─── MODAL PARTENARIAT CABINET ─── */}
       {showPartnershipModal && (
         <PartnershipModal theme={theme} onClose={() => setShowPartnershipModal(false)} />
+      )}
+
+      {/* ─── MODAL APPEL DECOUVERTE ─── */}
+      {showCallModal && (
+        <CallModal theme={theme} offer={callOffer} clientType={callType} onClose={() => { setShowCallModal(false); setCallOffer(null); }} />
       )}
     </div>
   );
@@ -670,6 +749,318 @@ function PartnershipModal({ theme, onClose }: { theme: "dark" | "light"; onClose
       <div className={`absolute inset-0 backdrop-blur-sm animate-[fadeIn_200ms_ease-out] ${theme === "dark" ? "bg-black/50" : "bg-slate-900/30"}`} />
       <div className={`relative w-full max-w-xl rounded-[10px] border border-border-gold animate-[slideUp_300ms_ease-out] max-h-[95vh] overflow-y-auto scroll-smooth ${theme === "dark" ? "shadow-[0_10px_40px_rgba(0,0,0,0.5)]" : "shadow-[0_12px_36px_rgba(15,23,42,0.22)]"}`}>
         <CabinetLeadForm offer={partnershipOffer} onClose={onClose} lightMode={theme === "light"} />
+      </div>
+    </div>
+  );
+}
+
+function CallModal({ theme, offer, clientType, onClose }: { theme: "dark" | "light"; offer: import("@/types/offers").Offer | null; clientType: "entrepreneur" | "cabinet"; onClose: () => void }) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
+  const [step, setStep] = useState<"calendar" | "contact" | "confirmed">("calendar");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [calYear, setCalYear] = useState(today.getFullYear());
+  const [calMonth, setCalMonth] = useState(today.getMonth());
+
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = ""; };
+  }, []);
+
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [onClose]);
+
+  const isSameDay = (a: Date, b: Date) =>
+    a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+
+  // Calendar grid: cells for current month (Mon-first)
+  const firstOfMonth = new Date(calYear, calMonth, 1);
+  // Mon=0 … Sun=6
+  const startOffset = (firstOfMonth.getDay() + 6) % 7;
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  const cells: (number | null)[] = [
+    ...Array(startOffset).fill(null),
+    ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
+  ];
+
+  const canGoPrev = calYear > today.getFullYear() || calMonth > today.getMonth();
+
+  const goToPrev = () => {
+    if (!canGoPrev) return;
+    if (calMonth === 0) { setCalYear(y => y - 1); setCalMonth(11); }
+    else setCalMonth(m => m - 1);
+  };
+  const goToNext = () => {
+    if (calMonth === 11) { setCalYear(y => y + 1); setCalMonth(0); }
+    else setCalMonth(m => m + 1);
+  };
+
+  const monthLabel = new Date(calYear, calMonth, 1).toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
+  const weekDays = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
+  const slots = ["9h00", "10h00", "11h00", "14h00", "15h00", "16h00", "17h00"];
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+    >
+      <div className={`absolute inset-0 backdrop-blur-md animate-[fadeIn_200ms_ease-out] ${theme === "dark" ? "bg-black/75" : "bg-slate-900/40"}`} />
+
+      <div className={`relative w-full max-w-[720px] overflow-hidden rounded-2xl border flex flex-col md:flex-row animate-[slideUp_300ms_ease-out] max-h-[88vh] ${theme === "dark" ? "border-white/10 bg-[#0b132b] shadow-[0_24px_64px_rgba(0,0,0,0.6)]" : "border-[#e2e8f0] bg-white shadow-[0_24px_64px_rgba(15,23,42,0.18)]"}`}>
+
+        {/* Close */}
+        <button
+          onClick={onClose}
+          className={`absolute right-4 top-4 z-10 grid h-8 w-8 place-items-center rounded-full transition-colors ${theme === "dark" ? "bg-white/8 text-white/60 hover:bg-white/14 hover:text-white" : "bg-slate-100 text-slate-400 hover:bg-slate-200 hover:text-slate-600"}`}
+        >
+          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+
+        {/* Sidebar */}
+        <aside className={`flex-shrink-0 md:w-[36%] px-6 py-7 border-b md:border-b-0 md:border-r ${theme === "dark" ? "bg-[#081020] border-white/8" : "bg-[#f7f9fc] border-[#e2e8f0]"}`}>
+
+          {/* Offre choisie — tout en haut */}
+          {offer && (
+            <div className={`mb-6 rounded-xl border px-4 py-3 ${theme === "dark" ? "border-gold/25 bg-gold/[0.07]" : "border-[#d5b86d]/50 bg-[#fdf6e8]"}`}>
+              <p className={`text-[10px] font-semibold uppercase tracking-widest ${theme === "dark" ? "text-gold/60" : "text-[#a07830]"}`}>Offre choisie</p>
+              <p className={`mt-0.5 text-base font-extrabold ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`}>{offer.title}</p>
+              {offer.priceLabel && (
+                <p className={`mt-0.5 text-xs ${theme === "dark" ? "text-foreground-muted" : "text-[#888]"}`}>{offer.priceLabel}{offer.priceUnit ? ` ${offer.priceUnit}` : ""}</p>
+              )}
+            </div>
+          )}
+
+          <h3 className={`font-title text-xl font-bold ${theme === "dark" ? "text-[#f3dfc0]" : "text-[#1a2a44]"}`}>Votre appel découverte</h3>
+          <p className={`mt-2 text-sm leading-relaxed ${theme === "dark" ? "text-foreground-secondary" : "text-[#555]"}`}>
+            30 min d&apos;échange gratuit pour analyser vos besoins et définir ensemble la meilleure solution.
+          </p>
+          <ul className="mt-7 space-y-3">
+            {["100% Gratuit", "Sans engagement", "Réponse rapide", "Échange personnalisé"].map((item) => (
+              <li key={item} className="flex items-center gap-3">
+                <span className={`flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border text-[11px] ${theme === "dark" ? "border-gold/50 text-gold" : "border-[#8a6120]/50 text-[#8a6120]"}`}>✓</span>
+                <span className={`text-sm ${theme === "dark" ? "text-foreground" : "text-[#333]"}`}>{item}</span>
+              </li>
+            ))}
+          </ul>
+          <div className={`mt-8 rounded-xl border px-4 py-3 ${theme === "dark" ? "border-gold/15 bg-gold/[0.06]" : "border-[#e6dcc3] bg-[#fdf8f0]"}`}>
+            <p className={`text-xs font-medium ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`}>Durée de l&apos;appel</p>
+            <p className={`mt-0.5 text-sm ${theme === "dark" ? "text-foreground-secondary" : "text-[#555]"}`}>30 minutes<br />Visio ou téléphone</p>
+          </div>
+        </aside>
+
+        {/* Main */}
+        <main className="flex-1 overflow-y-auto px-6 py-7">
+          {step === "confirmed" ? (
+            <div className="flex h-full min-h-[300px] flex-col items-center justify-center gap-4 text-center">
+              <div className={`grid h-16 w-16 place-items-center rounded-full ${theme === "dark" ? "bg-gold/15 text-gold" : "bg-gold/15 text-[#8a6120]"}`}>
+                <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                </svg>
+              </div>
+              <h4 className={`font-title text-xl font-bold ${theme === "dark" ? "text-[#f3dfc0]" : "text-[#1a2a44]"}`}>Créneau confirmé !</h4>
+              <p className={`text-sm ${theme === "dark" ? "text-foreground-secondary" : "text-[#555]"}`}>
+                Vous recevrez une confirmation par email.<br />À très bientôt !
+              </p>
+              <button onClick={onClose} className={`mt-4 rounded-full px-6 py-2 text-sm font-semibold transition-colors ${theme === "dark" ? "bg-gold text-[#0b132b] hover:bg-gold-light" : "bg-gold text-[#0b132b] hover:bg-[#d7b764]"}`}>
+                Fermer
+              </button>
+            </div>
+          ) : step === "contact" ? (
+            <>
+              <button onClick={() => setStep("calendar")} className={`mb-5 flex items-center gap-1.5 text-xs font-medium transition-colors ${theme === "dark" ? "text-foreground-muted hover:text-foreground-secondary" : "text-[#888] hover:text-[#555]"}`}>
+                <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" /></svg>
+                Retour au calendrier
+              </button>
+              <h3 className={`font-title text-xl font-bold ${theme === "dark" ? "text-[#f3dfc0]" : "text-[#1a2a44]"}`}>Vos coordonnées</h3>
+              <p className={`mt-1 text-sm ${theme === "dark" ? "text-foreground-muted" : "text-[#666]"}`}>
+                Créneau : <span className="font-semibold text-gold">{selectedDate?.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" })} à {selectedSlot}</span>
+              </p>
+              <div className="mt-6 space-y-4">
+                <div>
+                  <label className={`mb-1.5 block text-xs font-semibold ${theme === "dark" ? "text-foreground-secondary" : "text-[#444]"}`}>Nom complet *</label>
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Jean Dupont"
+                    maxLength={120}
+                    className={`w-full rounded-lg border px-3 py-2.5 text-sm outline-none transition-colors ${theme === "dark" ? "border-white/10 bg-white/[0.04] text-foreground placeholder:text-white/25 focus:border-gold/50 focus:bg-white/[0.06]" : "border-[#e2e8f0] bg-white text-[#333] placeholder:text-slate-300 focus:border-[#d5b86d]"}`}
+                  />
+                </div>
+                <div>
+                  <label className={`mb-1.5 block text-xs font-semibold ${theme === "dark" ? "text-foreground-secondary" : "text-[#444]"}`}>Email *</label>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="jean@exemple.fr"
+                    maxLength={254}
+                    className={`w-full rounded-lg border px-3 py-2.5 text-sm outline-none transition-colors ${theme === "dark" ? "border-white/10 bg-white/[0.04] text-foreground placeholder:text-white/25 focus:border-gold/50 focus:bg-white/[0.06]" : "border-[#e2e8f0] bg-white text-[#333] placeholder:text-slate-300 focus:border-[#d5b86d]"}`}
+                  />
+                </div>
+              </div>
+              <button
+                disabled={!name.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || submitting}
+                onClick={async () => {
+                  if (!selectedDate || !selectedSlot || !name.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return;
+                  setSubmitting(true);
+                  try {
+                    await fetch("/api/admin/bookings", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({
+                        type: clientType,
+                        offerTitle: offer?.title ?? "Appel découverte cabinet",
+                        offerPrice: offer?.priceLabel ? `${offer.priceLabel}${offer.priceUnit ? ` ${offer.priceUnit}` : ""}` : undefined,
+                        date: selectedDate.toISOString(),
+                        slot: selectedSlot,
+                        name: name.trim(),
+                        email: email.trim().toLowerCase(),
+                      }),
+                    });
+                  } finally {
+                    setSubmitting(false);
+                    setStep("confirmed");
+                  }
+                }}
+                className={`mt-8 w-full rounded-xl py-3.5 text-sm font-bold transition-all duration-200 ${
+                  name.trim() && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && !submitting
+                    ? "bg-gold text-[#0b132b] hover:bg-gold-light shadow-[0_4px_14px_rgba(201,168,76,0.25)]"
+                    : theme === "dark"
+                      ? "cursor-not-allowed bg-white/[0.05] text-white/30"
+                      : "cursor-not-allowed bg-slate-100 text-slate-300"
+                }`}
+              >
+                {submitting ? "Envoi…" : "Confirmer le créneau"}
+              </button>
+            </>
+          ) : (
+            <>
+              {/* Calendar header */}
+              <div className="flex items-center justify-between pr-10">
+                <div className="flex items-center gap-2">
+                  <svg className={`h-5 w-5 flex-shrink-0 ${theme === "dark" ? "text-gold" : "text-[#8a6120]"}`} fill="none" viewBox="0 0 24 24" strokeWidth={1.6} stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3.75 8.25h16.5M4.5 5.25h15A.75.75 0 0 1 20.25 6v12.75a.75.75 0 0 1-.75.75h-15a.75.75 0 0 1-.75-.75V6a.75.75 0 0 1 .75-.75Z" />
+                  </svg>
+                  <h3 className={`font-title text-xl font-bold capitalize ${theme === "dark" ? "text-[#f3dfc0]" : "text-[#1a2a44]"}`}>
+                    {monthLabel}
+                  </h3>
+                </div>
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={goToPrev}
+                    disabled={!canGoPrev}
+                    className={`grid h-8 w-8 place-items-center rounded-full transition-colors ${!canGoPrev ? "opacity-25 cursor-not-allowed" : theme === "dark" ? "hover:bg-white/10 text-foreground-secondary" : "hover:bg-slate-100 text-[#555]"}`}
+                  >
+                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" /></svg>
+                  </button>
+                  <button
+                    onClick={goToNext}
+                    className={`grid h-8 w-8 place-items-center rounded-full transition-colors ${theme === "dark" ? "hover:bg-white/10 text-foreground-secondary" : "hover:bg-slate-100 text-[#555]"}`}
+                  >
+                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" /></svg>
+                  </button>
+                </div>
+              </div>
+
+              {/* Week day labels */}
+              <div className="mt-4 grid grid-cols-7 gap-1">
+                {weekDays.map((wd) => (
+                  <div key={wd} className={`py-1 text-center text-[11px] font-semibold uppercase tracking-wide ${theme === "dark" ? "text-foreground-muted" : "text-slate-400"}`}>{wd}</div>
+                ))}
+              </div>
+
+              {/* Calendar cells */}
+              <div className="mt-1 grid grid-cols-7 gap-1">
+                {cells.map((day, idx) => {
+                  if (day === null) return <div key={`empty-${idx}`} />;
+                  const cellDate = new Date(calYear, calMonth, day);
+                  cellDate.setHours(0, 0, 0, 0);
+                  const isPast = cellDate <= today;
+                  const isSelected = selectedDate !== null && isSameDay(cellDate, selectedDate);
+                  return (
+                    <button
+                      key={day}
+                      disabled={isPast}
+                      onClick={() => { setSelectedDate(cellDate); setSelectedSlot(null); }}
+                      className={`aspect-square w-full rounded-lg text-sm font-medium transition-all duration-150 ${
+                        isPast
+                          ? theme === "dark" ? "text-white/15 cursor-not-allowed" : "text-slate-200 cursor-not-allowed"
+                          : isSelected
+                            ? theme === "dark"
+                              ? "bg-gold text-[#0b132b] shadow-[0_0_0_2px_rgba(201,168,76,0.4)]"
+                              : "bg-gold text-[#0b132b] shadow-[0_0_0_2px_rgba(201,168,76,0.4)]"
+                            : theme === "dark"
+                              ? "text-foreground-secondary hover:bg-gold/15 hover:text-gold"
+                              : "text-[#444] hover:bg-[#fdf8f0] hover:text-[#8a6120]"
+                      }`}
+                    >
+                      {day}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Time slots */}
+              <h3 className={`mt-7 font-title text-lg font-bold ${theme === "dark" ? "text-[#f3dfc0]" : "text-[#1a2a44]"}`}>
+                    Choisissez un créneau
+                  </h3>
+                  <p className={`mt-0.5 text-xs ${theme === "dark" ? "text-foreground-muted" : "text-[#888]"}`}>
+                    {selectedDate
+                      ? selectedDate.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" })
+                      : "Sélectionnez d'abord une date"}
+                  </p>
+                  <div className="mt-4 grid grid-cols-4 gap-2">
+                    {slots.map((slot) => (
+                      <button
+                        key={slot}
+                        disabled={selectedDate === null}
+                        onClick={() => selectedDate !== null && setSelectedSlot(slot)}
+                        className={`rounded-lg border py-2.5 text-sm font-medium transition-all duration-150 ${
+                          selectedDate === null
+                            ? theme === "dark"
+                              ? "cursor-not-allowed border-white/5 bg-white/[0.02] text-white/20"
+                              : "cursor-not-allowed border-slate-100 bg-slate-50 text-slate-200"
+                            : selectedSlot === slot
+                              ? theme === "dark"
+                                ? "border-gold bg-gold text-[#0b132b]"
+                                : "border-[#d5b86d] bg-gold text-[#0b132b]"
+                              : theme === "dark"
+                                ? "border-white/10 bg-white/[0.03] text-foreground-secondary hover:border-gold/30 hover:bg-white/[0.06]"
+                                : "border-[#e2e8f0] bg-white text-[#555] hover:border-[#d5b86d] hover:bg-[#fdf8f0]"
+                        }`}
+                      >
+                        {slot}
+                      </button>
+                    ))}
+                  </div>
+
+              <button
+                onClick={() => { if (selectedDate !== null && selectedSlot) setStep("contact"); }}
+                disabled={selectedDate === null || !selectedSlot}
+                className={`mt-8 w-full rounded-xl py-3.5 text-sm font-bold transition-all duration-200 ${
+                  selectedDate !== null && selectedSlot
+                    ? "bg-gold text-[#0b132b] hover:bg-gold-light shadow-[0_4px_14px_rgba(201,168,76,0.25)]"
+                    : theme === "dark"
+                      ? "cursor-not-allowed bg-white/[0.05] text-white/30"
+                      : "cursor-not-allowed bg-slate-100 text-slate-300"
+                }`}
+              >
+                Suivant — Mes coordonnées
+              </button>
+            </>
+          )}
+        </main>
       </div>
     </div>
   );

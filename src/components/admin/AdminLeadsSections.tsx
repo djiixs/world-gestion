@@ -25,8 +25,21 @@ type LeadRecord = {
   note?: string;
 };
 
+type BookingRecord = {
+  id: string;
+  createdAt: string;
+  type: LeadType;
+  offerTitle: string;
+  offerPrice?: string;
+  date: string;
+  slot: string;
+  name: string;
+  email: string;
+};
+
 interface Props {
   leads: LeadRecord[];
+  bookings: BookingRecord[];
 }
 
 function formatDate(value: string) {
@@ -39,8 +52,8 @@ function formatDate(value: string) {
   });
 }
 
-export default function AdminLeadsSections({ leads: initialLeads }: Props) {
-  const [activeTab, setActiveTab] = useState<"inbox" | "draft">("inbox");
+export default function AdminLeadsSections({ leads: initialLeads, bookings }: Props) {
+  const [activeTab, setActiveTab] = useState<"inbox" | "draft" | "bookings">("inbox");
   const [sortOrder, setSortOrder] = useState<"newest" | "oldest">("newest");
   const [selectedOffer, setSelectedOffer] = useState<Offer | null>(null);
   const [hoveredOffer, setHoveredOffer] = useState<{
@@ -120,6 +133,7 @@ export default function AdminLeadsSections({ leads: initialLeads }: Props) {
   const tabLabels = {
     inbox: `Demandes (${grouped.inbox.length})`,
     draft: `Brouillons (${grouped.draft.length})`,
+    bookings: `Réservations (${bookings.length})`,
   };
 
   const pinnedCount = grouped.inbox.filter((l) => l.state === "pinned").length;
@@ -264,8 +278,8 @@ export default function AdminLeadsSections({ leads: initialLeads }: Props) {
     </button>
   );
 
-  const activeItems = grouped[activeTab];
-  const activeSummary = summaryByTab[activeTab];
+  const activeItems = activeTab === "bookings" ? [] : grouped[activeTab];
+  const activeSummary = activeTab === "bookings" ? { title: "Réservations d'appel", count: bookings.length, meta: `Total des appels réservés` } : summaryByTab[activeTab];
 
   return (
     <div className="space-y-4">
@@ -306,6 +320,20 @@ export default function AdminLeadsSections({ leads: initialLeads }: Props) {
                   <path d="M9 12h6m-6 4h6m2-8H7a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2V10a2 2 0 00-2-2zm-2-4h4a1 1 0 010 2h-4a1 1 0 010-2z" />
                 </svg>
                 {tabLabels.draft}
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab("bookings")}
+                className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold transition-all ${
+                  activeTab === "bookings"
+                    ? "border-gold bg-gold text-[#0b132b] shadow-[0_10px_22px_rgba(201,168,76,0.22)]"
+                    : "border-border bg-background/40 text-foreground-secondary hover:border-gold/35 hover:text-gold"
+                }`}
+              >
+                <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                {tabLabels.bookings}
               </button>
               <button
                 type="button"
@@ -363,6 +391,47 @@ export default function AdminLeadsSections({ leads: initialLeads }: Props) {
 
       <section className="rounded-[28px] border border-border bg-background-tertiary/90 p-4 shadow-[0_16px_40px_rgba(0,0,0,0.12)] sm:p-5">
         <div key={activeTab} className="animate-[slideSide_280ms_cubic-bezier(0.22,1,0.36,1)] overflow-x-auto">
+          {activeTab === "bookings" ? (
+            <table className="w-full min-w-[960px] text-sm">
+              <thead>
+                <tr className="border-b border-gold/20">
+                  <th className="px-3 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.22em] text-foreground-muted">Date de réservation</th>
+                  <th className="px-3 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.22em] text-foreground-muted">Côté</th>
+                  <th className="px-3 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.22em] text-foreground-muted">Nom</th>
+                  <th className="px-3 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.22em] text-foreground-muted">Email</th>
+                  <th className="px-3 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.22em] text-foreground-muted">Offre</th>
+                  <th className="px-3 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.22em] text-foreground-muted">Prix</th>
+                  <th className="px-3 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.22em] text-foreground-muted">Date appel</th>
+                  <th className="px-3 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.22em] text-foreground-muted">Créneau</th>
+                </tr>
+              </thead>
+              <tbody>
+                {bookings.slice().reverse().map((booking) => (
+                  <tr key={booking.id} className="border-b border-white/6 align-top transition-colors hover:bg-white/[0.02]">
+                    <td className="px-3 py-3 text-foreground-secondary">{formatDate(booking.createdAt)}</td>
+                    <td className="px-3 py-3">
+                      <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold ${booking.type === "cabinet" ? "bg-blue-500/15 text-blue-300" : "bg-gold/15 text-gold"}`}>
+                        {booking.type === "cabinet" ? "Cabinet" : "Entrepreneur"}
+                      </span>
+                    </td>
+                    <td className="px-3 py-3 font-medium text-foreground">{booking.name}</td>
+                    <td className="px-3 py-3 text-foreground-secondary">{booking.email}</td>
+                    <td className="px-3 py-3 text-foreground-secondary">{booking.offerTitle}</td>
+                    <td className="px-3 py-3 text-foreground-secondary">{booking.offerPrice ?? "—"}</td>
+                    <td className="px-3 py-3 text-foreground-secondary capitalize">{new Date(booking.date).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" })}</td>
+                    <td className="px-3 py-3 font-medium text-gold">{booking.slot}</td>
+                  </tr>
+                ))}
+                {bookings.length === 0 && (
+                  <tr>
+                    <td className="px-3 py-10 text-center text-foreground-muted" colSpan={8}>
+                      Aucune réservation d&apos;appel pour l&apos;instant.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          ) : (
           <table className="w-full min-w-[920px] text-sm">
           <thead>
             <tr className="border-b border-gold/20">
@@ -458,6 +527,7 @@ export default function AdminLeadsSections({ leads: initialLeads }: Props) {
             )}
           </tbody>
           </table>
+          )}
         </div>
       </section>
 
