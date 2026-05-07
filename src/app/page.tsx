@@ -675,7 +675,7 @@ export default function Home() {
                       <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3.75 8.25h16.5M4.5 5.25h15A.75.75 0 0 1 20.25 6v12.75a.75.75 0 0 1-.75.75h-15a.75.75 0 0 1-.75-.75V6a.75.75 0 0 1 .75-.75Z" />
                       </svg>
-                      <span>Je réserve un appel</span>
+                      <span>Échanger sur vos besoins</span>
                     </button>
                     <p className={`mt-4 text-sm font-medium ${theme === "dark" ? "text-foreground-muted" : "text-[#888]"}`}>
                       Réponse sous 24h garantie
