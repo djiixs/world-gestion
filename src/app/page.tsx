@@ -454,7 +454,7 @@ export default function Home() {
 
                 {/* ─── Premium Services ─── */}
                 <div className="reveal-up">
-                  <h3 className={`font-title text-center text-xl font-bold mb-2 ${theme === "dark" ? "text-white" : "text-[#1a2a44]"}`}>
+                  <h3 className={`font-title text-center text-2xl md:text-3xl font-bold mb-2 ${theme === "dark" ? "text-gold" : "text-[#1a2a44]"}`}>
                     Ce que je peux prendre en charge
                   </h3>
                   <div className="mx-auto mb-8 h-[2px] w-10 rounded-full bg-gold" />
@@ -536,7 +536,7 @@ export default function Home() {
                     {[
                       {
                         title: "Gain de productivité",
-                        text: "Vous libérez du temps pour le conseil.",
+                        text: "Vous libérez du temps pour vous concentrer sur le conseil et vos clients.",
                         icon: (
                           <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M3 17.25V9.75m6 7.5V6.75m6 10.5V12m6 5.25V3.75" />
@@ -545,7 +545,7 @@ export default function Home() {
                       },
                       {
                         title: "Flexibilité totale",
-                        text: "Adaptez le volume selon vos pics d'activité.",
+                        text: "Vous adaptez le volume de travail selon vos pics d'activité.",
                         icon: (
                           <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 7.5h9m0 0-3-3m3 3-3 3M16.5 16.5h-9m0 0 3-3m-3 3 3 3" />
@@ -554,7 +554,7 @@ export default function Home() {
                       },
                       {
                         title: "Maîtrise des coûts",
-                        text: "Pas de recrutement, pas de charges sociales.",
+                        text: "Pas de recrutement, pas de charges sociales, vous payez pour ce dont vous avez besoin.",
                         icon: (
                           <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 3.75h9A1.5 1.5 0 0 1 18 5.25v13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 6 18.75V5.25a1.5 1.5 0 0 1 1.5-1.5Z" />
@@ -564,7 +564,7 @@ export default function Home() {
                       },
                       {
                         title: "Réactivité",
-                        text: "Je m'engage à répondre rapidement.",
+                        text: "Je m'engage à répondre rapidement à vos demandes et à respecter vos délais.",
                         icon: (
                           <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6l4 2.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
@@ -573,7 +573,7 @@ export default function Home() {
                       },
                       {
                         title: "Confidentialité",
-                        text: "Données traitées avec rigueur et discrétion.",
+                        text: "Vos données sont traitées avec la plus grande rigueur et discrétion.",
                         icon: (
                           <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
@@ -606,7 +606,7 @@ export default function Home() {
                       {
                         number: "1",
                         title: "Prise de contact",
-                        text: "Vous m'expliquez vos besoins et attentes.",
+                        text: "Vous m'expliquez vos besoins et vos attentes.",
                         icon: (
                           <svg className="h-9 w-9" fill="none" viewBox="0 0 24 24" strokeWidth={1.6} stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
@@ -616,7 +616,7 @@ export default function Home() {
                       {
                         number: "2",
                         title: "Analyse et adaptation",
-                        text: "Je prends connaissance de votre organisation.",
+                        text: "Je prends connaissance de votre organisation et de vos outils.",
                         icon: (
                           <svg className="h-9 w-9" fill="none" viewBox="0 0 24 24" strokeWidth={1.6} stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-8.25a2.25 2.25 0 0 0-2.25-2.25H6.75A2.25 2.25 0 0 0 4.5 6v12a2.25 2.25 0 0 0 2.25 2.25h5.25" />
@@ -627,7 +627,7 @@ export default function Home() {
                       {
                         number: "3",
                         title: "Démarrage rapide",
-                        text: "Je m'intègre à vos process convenus.",
+                        text: "Je m'intègre à vos process et prends en charge les missions convenues.",
                         icon: (
                           <svg className="h-9 w-9" fill="none" viewBox="0 0 24 24" strokeWidth={1.6} stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12a7.5 7.5 0 0 1 15 0m-15 0a7.5 7.5 0 0 0 15 0m-15 0H3m16.5 0H21" />
@@ -638,7 +638,7 @@ export default function Home() {
                       {
                         number: "4",
                         title: "Suivi et ajustement",
-                        text: "J'assure un suivi régulier pour optimiser notre collaboration.",
+                        text: "Nous échangeons régulièrement pour ajuster et optimiser la collaboration.",
                         icon: (
                           <svg className="h-9 w-9" fill="none" viewBox="0 0 24 24" strokeWidth={1.6} stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75" />
